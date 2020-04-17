@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ischoolbar.programmer.apply.mapper.CategoryMapper">
+	<select id="selectPageVo" resultType="Category">
+		select * from category
+		<where>
+			<if test="category.cname != null">
+				and cname like '%${category.cname}%'
+			</if>
+		</where>
+	</select>
+</mapper>

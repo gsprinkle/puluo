@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ischoolbar.programmer.apply.mapper.ItemMapper">
+
+	<resultMap type="com.ischoolbar.programmer.apply.vo.ItemCategoryVo"
+		id="itemCategoryMap">
+		<id column="item_id" property="itemId" />
+		<result column="cname" property="cname" />
+		<result column="item_name" property="itemName" />
+		<result column="item_price" property="itemPrice" />
+		<result column="unit" property="unit" />
+		<result column="item_remark" property="itemRemark" />
+		<result column="cid" property="cid" />
+	</resultMap>
+	<select id="selectItemCategoryVo"  resultMap="itemCategoryMap">
+		select * from item left JOIN category ON item.cid = category.cid
+		<where>
+			<if test="item.itemName != null">
+				and item_name like '%${item.itemName}%'
+			</if>
+			<if test="item.cid != null and item.cid !=''">
+				and item.cid = ${item.cid}
+			</if>
+		</where>
+	</select>
+</mapper>

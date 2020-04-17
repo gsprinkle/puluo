@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ischoolbar.programmer.apply.mapper.EmployeeMapper">
+
+	<resultMap type="com.ischoolbar.programmer.apply.vo.EmployeeDepartmentVo"
+		id="employeeDepartmentMap">
+		<id column="eid" property="eid" />
+		<result column="ename" property="ename" />
+		<result column="dept_id" property="deptId" />
+		<result column="telphone" property="telphone" />
+		<result column="eremark" property="eremark" />
+	</resultMap>
+	<select id="selectEmployeeDepartmentVo"  resultMap="employeeDepartmentMap">
+		select * from employee e left JOIN department d ON e.dept_id = d.dept_id
+		<where>
+			<if test="emp.ename != null">
+				and ename like '%${emp.ename}%'
+			</if>
+			<if test="emp.deptId != null and emp.deptId !='' and emp.deptId != 1000">
+				and e.dept_id = ${emp.deptId}
+			</if>
+		</where>
+	</select>
+</mapper>
