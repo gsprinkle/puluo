@@ -1,6 +1,7 @@
 package com.ischoolbar.programmer.apply.controller;
 
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,9 +72,12 @@ public class InventoryController {
 		Page<InventoryVo> page = new Page<>();
 		page.setCurrent(current);
 		page.setSize(size);
-		//page = inventoryService.selectByPage(page, inventory);
+		page = inventoryService.selectByPage(page, inventory);
 		ret.put("total", page.getTotal());
 		ret.put("rows", page.getRecords());
+		// 查询 总价值
+		BigDecimal total = inventoryService.countTotalPrice();
+		ret.put("countTotal", total);
 		return ret;
 	}
 

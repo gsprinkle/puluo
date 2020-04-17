@@ -1,10 +1,23 @@
 package com.ischoolbar.programmer.apply.vo;
 
+import java.math.BigDecimal;
+
 import com.ischoolbar.programmer.apply.entity.Inventory;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
-public class InventoryVo extends Inventory{
-	
+@EqualsAndHashCode(callSuper = false)
+public class InventoryVo extends Inventory {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private String itemName; // 商品名称
+	private BigDecimal itemPrice; // 商品单价
+	private String unit;			// 商品单位
+	private BigDecimal totalPrice; // 单个商品的总价格
+	private Integer cid;
+	private String cname; // 商品分类名称
 }

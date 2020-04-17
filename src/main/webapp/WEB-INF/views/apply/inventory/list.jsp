@@ -10,6 +10,7 @@
 		<div class="wu-toolbar-search">
 			<label>物品名称:</label><input id="search-name" onkeyup="changeName()" class="wu-text" style="width: 100px">
 			<!-- <a href="#" id="search-btn"	class="easyui-linkbutton" iconCls="icon-search">搜索</a> -->
+			<label style="color:#e73904;" id="countTotal"></label>
 		</div>
 
 	</div>
@@ -28,34 +29,7 @@
 
 <!-- End of easyui-dialog -->
 <script type="text/javascript">
-	/** 
-	 * 载入产品数据
-	 private Integer productId;
-
-	    private String productName;
-
-	    private Integer brandId;
-	    
-	    private Integer cid;
-
-	    private Long productPrice;
-
-	    private Integer orderId;
-
-	    private Integer state;
-
-	    private String productRemark;
-	    
-	    private Integer inventoryId;
-
-	    private Integer productId;
-
-	    private Integer inventoryNum;
-	    
-	    private Integer storeId;// 所在仓库
-
-	    private String inventoryRemark;
-	 */
+	
 	/**
 	初始化库存列表
 	 */
@@ -98,12 +72,6 @@
 			width : 100,
 			sortable : true
 		}, {
-			field : 'inventoryNum',
-			title : '剩余库存',
-			width : 100,
-			sortable : true,
-			editor : "text"
-		}, {
 			field : 'cid',
 			title : '分类id',
 			width : 100,
@@ -115,13 +83,34 @@
 			width : 100,
 			sortable : true,
 		}, {
+			field : 'inventoryNum',
+			title : '剩余库存',
+			width : 60,
+			sortable : true,
+		},  {
+			field : 'unit',
+			title : '单位',
+			width : 40,
+			sortable : true
+		},{
+			field : 'totalPrice',
+			title : '总价',
+			width : 100,
+			sortable : true,
+			formatter : function(value){
+				if(value){
+					return value.toFixed(2);
+				}
+			}
+		}, {
 			field : 'inventoryRemark',
-			title : '产品备注',
+			title : '备注',
 			width : 100,
 			sortable : true
 		} ] ],
 		onLoadSuccess : function(data) {
 			$('#data-datagrid').datagrid('unselectAll');
+			$('#countTotal').text('当前库存物品总价值：' + data.countTotal.toFixed(2) + '元');
 		},
 		onDblClickRow : onDblClickRow,
 		onClickRow : onClickRow
