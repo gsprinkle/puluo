@@ -28,6 +28,8 @@ public class Inventory implements Serializable {
     private Integer inventoryId;
 
     private Integer itemId;
+    
+    private String itemName;
 
     private Integer inventoryNum;
 

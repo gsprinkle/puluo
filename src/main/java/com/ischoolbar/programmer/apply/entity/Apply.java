@@ -27,11 +27,6 @@ import lombok.experimental.Accessors;
 public class Apply {
 
     private static final long serialVersionUID = 1L;
-    @TableField(exist = false)
-    private Integer dateMode = 0;// 0:日期查询，1：月份查询  2：年查询
-    @TableField(exist = false)
-    private String date;
-
     @TableId(value = "apply_id", type = IdType.AUTO)
     private Integer applyId;
     private Integer cid;

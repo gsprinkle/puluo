@@ -1,30 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ischoolbar.programmer.apply.mapper.InventoryMapper">
-	
-	<resultMap type="com.ischoolbar.programmer.apply.vo.InventoryVo" id="invResultMap">
-		<id column="inventory_id" property="inventoryId"/>
-		<result column="item_id" property="itemId"/>
-		<result column="item_name" property="itemName"/>
-		<result column="item_price" property="itemPrice"/>
-		<result column="unit" property="unit"/>
-		
-		<result column="cid" property="cid"/>
-		<result column="cname" property="cname"/>
-		<result column="inventory_num" property="inventoryNum"/>
-		<result column="total_price" property="totalPrice"/>
-		<result column="inventory_remark" property="inventoryRemark"/>
+<mapper
+	namespace="com.ischoolbar.programmer.apply.mapper.InventoryMapper">
+
+	<resultMap
+		type="com.ischoolbar.programmer.apply.vo.InventoryVo"
+		id="invResultMap">
+		<id column="inventory_id" property="inventoryId" />
+		<result column="item_id" property="itemId" />
+		<result column="item_name" property="itemName" />
+		<result column="item_price" property="itemPrice" />
+		<result column="unit" property="unit" />
+		<result column="cid" property="cid" />
+		<result column="cname" property="cname" />
+		<result column="inventory_num" property="inventoryNum" />
+		<result column="total_price" property="totalPrice" />
+		<result column="inventory_remark" property="inventoryRemark" />
 	</resultMap>
-	
+
+	<!-- 查询库存列表  按名称搜索-->
 	<select id="selectByPage" resultMap="invResultMap">
-		select i.*,item.*,(i.inventory_num * item.item_price) total_price,c.cname
+		select
+		i.*,item.*,(i.inventory_num * item.item_price) total_price,c.cname
 		from inventory i
 		left JOIN item on i.item_id = item.item_id
 		left JOIN category c on c.cid = item.cid
+		<where>
+			<if test="inv.itemName != null and inv.itemName != ''">
+				and i.item_name like '%${inv.itemName}%'
+			</if>
+		</where>
+		order by c.cname,item.item_id
+	</select>
+
+	<!-- 查询合计 -->
+	<select id="countTotalPrice" resultType="decimal">
+		select
+		sum(i.inventory_num * item.item_price) total from inventory i
+		left JOIN item on i.item_id = item.item_id
+	</select>
+
+	<!-- 初始化库存列表 -->
+	<select id="truncate">
+		truncate table inventory;
 	</select>
 	
-	<select id="countTotalPrice" resultType="decimal">
-		select sum(i.inventory_num * item.item_price) total from inventory i 
-		left JOIN item on i.item_id = item.item_id
+	<select id="initList" resultType="Inventory">
+		select i.item_id,i.item_name,inv.inventory_id,inv.item_name,ifnull(SUM(s.stock_num)-SUM(a.apply_num),0)
+		inventory_num from item i
+		left JOIN apply a on i.item_id = a.item_id
+		left JOIN stock s on i.item_id = s.item_id
+		left JOIN inventory inv on i.item_id = inv.item_id
+		group by i.item_id,i.item_name,inv.inventory_id
 	</select>
 </mapper>

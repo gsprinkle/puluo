@@ -156,6 +156,8 @@
 					$.messager.alert('信息提示', '添加成功！', 'info');
 					$('#add-dialog').dialog('close');
 					$('#data-datagrid').datagrid('reload');
+					// 关闭tabs
+					closeTabByItem();
 				} else {
 					$.messager.alert('信息提示', data.msg, 'warning');
 				}
@@ -184,6 +186,8 @@
 					$.messager.alert('信息提示', '修改成功！', 'info');
 					$('#edit-dialog').dialog('close');
 					$('#data-datagrid').datagrid('reload');
+					// 关闭tabs
+					closeTabByItem();
 				} else {
 					$.messager.alert('信息提示', data.msg, 'warning');
 				}
@@ -209,6 +213,8 @@
 						if (data.type == 'success') {
 							$.messager.alert('信息提示', '删除成功！', 'info');
 							$('#data-datagrid').datagrid('reload');
+							// 关闭tabs
+							closeTabByItem();
 						} else {
 							$.messager.alert('信息提示', data.msg, 'warning');
 						}
@@ -334,4 +340,11 @@
 			$('#data-datagrid').datagrid('unselectAll');
 		}
 	});
+	
+	/*关闭tabs*/
+	function closeTabByItem(){
+		closeTab('库存管理');
+		closeTab('领用管理');
+		closeTab('采购管理');
+	}
 </script>

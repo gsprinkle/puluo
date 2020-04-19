@@ -1,5 +1,6 @@
 package com.ischoolbar.programmer.apply.service.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -36,6 +37,12 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyMapper, Apply> implements
 	public List<ApplyVo> selectByChart(Apply apply) {
 		// TODO Auto-generated method stub
 		return baseMapper.selectByChart(apply);
+	}
+
+	@Override
+	public BigDecimal countTotalPrice(Apply apply) {
+		// TODO Auto-generated method stub
+		return baseMapper.countTotalPrice(apply);
 	}
 
 }

@@ -16,9 +16,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="name != null">
 			and name like '%${name}%' 
 		</if>
+		order by order_id asc,id asc
 		<if test="offset != null and pageSize != null">
 			limit #{offset},#{pageSize}
 		</if>
+		
 	</select>
 	<!-- 菜单信息模糊分页搜索查询总记录数 -->
 	<select id="getTotal" parameterType="Map" resultType="Integer">
@@ -32,15 +34,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	<!-- 获取顶级菜单信息 -->
 	<select id="findTopList" parameterType="Map" resultType="Menu">
-		select * from menu where parentId = 0
+		select * from menu where parentId = 0 order by order_id asc,id asc
 	</select>
 	<!-- 获取某一分类的子菜单信息 -->
 	<select id="findChildernList" parameterType="Long" resultType="Menu">
-		select * from menu where parentId = #{parentId}
+		select * from menu where parentId = #{parentId} order by order_id asc,id asc
 	</select>
 	<!-- 根据菜单id获取菜单信息 -->
 	<select id="findListByIds" parameterType="String" resultType="Menu">
-		select * from menu where id in(${value})
+		select * from menu where id in(${value}) order by order_id asc,id asc
 	</select>
 	<!-- 修改菜单信息 -->
 	<update id="edit" parameterType="Menu">

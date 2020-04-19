@@ -25,3 +25,11 @@ function getYearMonth() {
 	return formatterForMonth(curDate);
 }
 
+/* 关闭tabs*/
+function closeTab(title){
+	var tabs = parent.$("#wu-tabs");
+	if(tabs.tabs('exists',title)){
+		tabs.tabs('close',title);
+	}
+}
+

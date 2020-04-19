@@ -14,7 +14,6 @@ public class InventoryVo extends Inventory {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private String itemName; // 商品名称
 	private BigDecimal itemPrice; // 商品单价
 	private String unit;			// 商品单位
 	private BigDecimal totalPrice; // 单个商品的总价格

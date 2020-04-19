@@ -1,5 +1,6 @@
 package com.ischoolbar.programmer.apply.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -21,4 +22,6 @@ public interface IApplyService extends IService<Apply> {
 	Page<ApplyVo> selectBySummary(Page<ApplyVo> page, Apply apply);
 
 	List<ApplyVo> selectByChart(Apply apply);
+
+	BigDecimal countTotalPrice(Apply apply);
 }

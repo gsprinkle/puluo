@@ -1,5 +1,6 @@
 package com.ischoolbar.programmer.apply.mapper;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -22,4 +23,5 @@ public interface ApplyMapper extends BaseMapper<Apply> {
 	Page<ApplyVo> selectApplyPageVo(Page<ApplyVo> page,@Param("apply")Apply apply);
 	Page<ApplyVo> selectBySummary(Page<ApplyVo> page,@Param("apply")Apply apply);
 	List<ApplyVo> selectByChart(@Param("apply")Apply apply);
+	BigDecimal countTotalPrice(@Param("apply")Apply apply);
 }

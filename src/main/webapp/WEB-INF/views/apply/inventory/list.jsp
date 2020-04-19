@@ -29,16 +29,27 @@
 
 <!-- End of easyui-dialog -->
 <script type="text/javascript">
-	
+function EasyUILoad() {
+    $("<div class=\"datagrid-mask\"></div>").css({ display: "block", width: "100%", height: "auto !important" }).appendTo("body");
+    $("<div class=\"datagrid-mask-msg\"></div>").html("<img  class ='img1' /> 正在运行，请稍候。。。").appendTo("body").css({ display: "block", left: ($(document.body).outerWidth(true) - 190) / 2, top: ($(window).height() - 45) / 2 });
+}
+
+function dispalyEasyUILoad() {
+    $(".datagrid-mask").remove();
+    $(".datagrid-mask-msg").remove();
+}	
 	/**
 	初始化库存列表
 	 */
 	function initialize() {
+		// 添加模式
+		EasyUILoad();
 		 $.ajax({
 			url : 'initialize',
 			type : 'GET',
 			dataType : 'json',
 			success : function(data) {
+				dispalyEasyUILoad();
 				if (data.type == 'success') {
 					$.messager.alert('信息提示', '初始化成功！', 'info');
 					$('#data-datagrid').datagrid('reload');
@@ -51,7 +62,7 @@
 	 
 	 
 	/**
-		数据列表
+		库存列表
 	*/
 	$('#data-datagrid').datagrid({
 		url : 'list',
@@ -67,6 +78,11 @@
 			field : 'chk',
 			checkbox : true
 		}, {
+			field : 'cname',
+			title : '物品分类',
+			width : 100,
+			sortable : true,
+		}, {
 			field : 'itemName',
 			title : '物品名称',
 			width : 100,
@@ -77,11 +93,6 @@
 			width : 100,
 			sortable : true,
 			hidden : true
-		}, {
-			field : 'cname',
-			title : '物品分类',
-			width : 100,
-			sortable : true,
 		}, {
 			field : 'inventoryNum',
 			title : '剩余库存',
@@ -110,7 +121,9 @@
 		} ] ],
 		onLoadSuccess : function(data) {
 			$('#data-datagrid').datagrid('unselectAll');
-			$('#countTotal').text('当前库存物品总价值：' + data.countTotal.toFixed(2) + '元');
+			if(data.countTotal){
+				$('#countTotal').text('当前库存物品总价值：' + data.countTotal.toFixed(2) + '元');
+			}
 		},
 		onDblClickRow : onDblClickRow,
 		onClickRow : onClickRow
@@ -124,15 +137,12 @@
 		var inventoryId = $("#data-datagrid").datagrid('getData').rows[editIndex].inventoryId;
 		var eNum = $("#data-datagrid").datagrid('getEditor',{index:editIndex,field:'inventoryNum'});
 		var inventoryNum = $(eNum.target).val();
-		var ed = $("#data-datagrid").datagrid('getEditor',{index:editIndex,field:'storeId'});
-		var storeId = $(ed.target).combobox('getValue');
 		$.ajax({
 			url : 'saveOrUpdate',
 			dataType : 'json',
 			data : {
 				'inventoryId' : inventoryId,
 				'inventoryNum' : inventoryNum,
-				'storeId' : storeId
 			},
 			success : function(){
 				$("#data-datagrid").datagrid('endEdit',editIndex);
@@ -157,30 +167,13 @@
 	function onClickRow(){
 		endEditing();
 	}
-	// 监听 品牌选择下拉框，当选择品牌时，根据品牌查询产品数据
-	$(function() {
-		$("#search-brandId").combobox({
-			url : '../brand/getBrandDropList',
-			valueField : 'brandId',
-			textField : 'brandName',
-			editable : false,
-			onSelect : function() {
-
-				$('#data-datagrid').datagrid('reload', {
-					brandId : $("#search-brandId").combobox('getValue')
-				});
-
-			}
-		});
-
-	});
 
 	/**
 		产品名称 搜索框，根据输入的关键词搜索
 	 */
 	function changeName() {
 		$('#data-datagrid').datagrid('reload', {
-			productName : $("#search-name").val()
+			itemName : $("#search-name").val()
 		})
 	}
 
@@ -195,7 +188,7 @@
 		}
 		var data = $("#add-form").serialize();
 		$.ajax({
-			url : '../product/saveOrUpdate',
+			url : '../item/saveOrUpdate',
 			dataType : 'json',
 			type : 'post',
 			data : data,
@@ -223,7 +216,7 @@
 
 		var data = $("#edit-form").serialize();
 		$.ajax({
-			url : '../product/saveOrUpdate',
+			url : '../item/saveOrUpdate',
 			dataType : 'json',
 			type : 'post',
 			data : data,
@@ -286,7 +279,7 @@
 		}
 		// console.log(node);
 		// 填充 产品 分类 表单项
-		$("#add-product-cid").val(node[0].id);
+		$("#add-item-cid").val(node[0].id);
 
 		$('#add-dialog').dialog({
 			closed : false,
@@ -333,11 +326,11 @@
 				}
 			} ],
 			onBeforeOpen : function() {
-				$("#edit-id").val(item.productId);
+				$("#edit-id").val(item.itemId);
 				$("#edit-brand").combobox("setValue", item.brandId);
 				$("#edit-cid").combobox("setValue", item.cid);
-				$("#edit-name").val(item.productName);
-				$("#edit-remark").val(item.productRemark);
+				$("#edit-name").val(item.itemName);
+				$("#edit-remark").val(item.itemRemark);
 			}
 		});
 	}

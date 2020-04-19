@@ -16,12 +16,8 @@
 	
 	<table id="data-datagrid" class="easyui-datagrid" toolbar="#wu-toolbar"></table>
 </div>
-<style>
-.selected {
-	background: red;
-}
-</style>
 <!-- Begin of easyui-dialog -->
+<!-- 物品分类 添加窗口 -->
 <div id="add-dialog" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'"
 	style="width: 450px; padding: 10px;">
 	<form id="add-form" method="post">
@@ -40,7 +36,7 @@
 </div>
 
 
-<!-- 修改窗口 -->
+<!-- 物品分类 修改窗口 -->
 <div id="edit-dialog" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'"
 	style="width: 450px; padding: 10px;">
 	<form id="edit-form" method="post">
@@ -84,6 +80,8 @@
 					$.messager.alert('信息提示', '添加成功！', 'info');
 					$('#add-dialog').dialog('close');
 					$('#data-datagrid').datagrid('reload');
+					// 关闭tabs
+					closeTabByCategory();
 				} else {
 					$.messager.alert('信息提示', data.msg, 'warning');
 				}
@@ -112,6 +110,8 @@
 					$.messager.alert('信息提示', '修改成功！', 'info');
 					$('#edit-dialog').dialog('close');
 					$('#data-datagrid').datagrid('reload');
+					// 关闭tabs
+					closeTabByCategory();
 				} else {
 					$.messager.alert('信息提示', data.msg, 'warning');
 				}
@@ -137,6 +137,8 @@
 						if (data.type == 'success') {
 							$.messager.alert('信息提示', '删除成功！', 'info');
 							$('#data-datagrid').datagrid('reload');
+							// 关闭tabs
+							closeTabByCategory();
 						} else {
 							$.messager.alert('信息提示', data.msg, 'warning');
 						}
@@ -242,4 +244,12 @@
 			$('#data-datagrid').datagrid('unselectAll');
 		}
 	});
+	
+	function closeTabByCategory(){
+		// 关闭tabs
+		closeTab('物品管理');
+		closeTab('库存管理');
+		closeTab('采购管理');
+		closeTab('领用管理');
+	}
 </script>

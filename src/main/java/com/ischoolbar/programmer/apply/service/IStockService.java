@@ -1,6 +1,12 @@
 package com.ischoolbar.programmer.apply.service;
 
 import com.ischoolbar.programmer.apply.entity.Stock;
+import com.ischoolbar.programmer.apply.vo.StockVo;
+
+import java.math.BigDecimal;
+import java.util.Map;
+
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -12,5 +18,15 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2020-04-14
  */
 public interface IStockService extends IService<Stock> {
+
+	Map<String, Object> addOrUpdate(Stock stock);
+
+	Map<String, Object> delete(Integer stockId);
+
+	Page<StockVo> selectByPage(Page<StockVo> page, Stock stock);
+
+	Page<StockVo> selectBySummary(Page<StockVo> page, StockVo stock);
+
+	BigDecimal countTotalPrice(StockVo stock);
 
 }

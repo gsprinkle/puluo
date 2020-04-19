@@ -14,6 +14,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result column="dept_id" property="deptId" />
 		<result column="eid" property="eid" />
 		<result column="apply_date" property="applyDate" />
+		<result column="summary_date" property="summaryDate" />
 		<result column="apply_remark" property="applyRemark" />
 		<result column="cname" property="cname" />
 		<result column="item_name" property="itemName" />
@@ -43,19 +44,34 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				and a.dept_id = ${apply.deptId}
 			</if>
 			<!-- 按日查询 -->
-			<if test="apply.dateMode == 0">
-				<if test="apply.applyDate != null">
-					and to_days(a.apply_date) =
-					to_days('${apply.applyDate}')
+			<if test="apply.date != null and apply.date != ''">
+				<if test="apply.dateMode == 1">
+					and DATE_FORMAT(apply_date,'%Y-%m-%d') = '${apply.date}'
+				</if>
+				<if test="apply.dateMode == 2">
+					and DATE_FORMAT(apply_date,'%Y-%m') = '${apply.date}'
+				</if>
+				<if test="apply.dateMode == 3">
+					and DATE_FORMAT(apply_date,'%Y') = '${apply.date}'
 				</if>
 			</if>
 		</where>
 		order by a.apply_id asc
 	</select>
 
+	<!-- 领用统计 -->
 	<select id="selectBySummary" resultMap="applyVoResult">
-		SELECT 		
-		d.dept_name,c.cname,SUM(a.apply_num * i.item_price) total_price
+		SELECT
+		<if test="apply.dateMode == 2">
+			date_format(apply_date,'%Y-%m') summary_date,
+		</if>
+		<if test="apply.dateMode == 3">
+			date_format(apply_date,'%Y') summary_date,
+		</if>
+		i.item_name,i.unit,
+		d.dept_name,		
+		SUM(a.apply_num) apply_num,
+		SUM(a.apply_num * i.item_price) total_price
 		FROM apply a
 		LEFT JOIN item i ON a.item_id = i.item_id
 		LEFT JOIN category c on i.cid = c.cid
@@ -66,21 +82,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				and a.dept_id = ${apply.deptId}
 			</if>
 			<!-- 按月查询 DATE_FORMAT(apply_date,'%Y-%m') = '${date}' -->
-			<if test="apply.dateMode == 1">
+			<if test="apply.dateMode == 2">
 				<if test="apply.date != null">
 					and DATE_FORMAT(apply_date,'%Y-%m') = '${apply.date}'
 				</if>
 			</if>
 			<!-- 按年查询 YEAR(apply_date) = '2020' -->
-			<if test="apply.dateMode == 2">
+			<if test="apply.dateMode == 3">
 				<if test="apply.date != null">
-					and YEAR(apply_date) = '${apply.date}'
+					and DATE_FORMAT(apply_date,'%Y') = '${apply.date}'
 				</if>
 			</if>
 		</where>
-		GROUP BY d.dept_name,c.cname
+		GROUP BY d.dept_name,i.item_name,i.unit,apply_date
+		ORDER BY d.dept_name
 	</select>
 	
+	<!-- 图表统计 -->
 	<select id="selectByChart" resultMap="applyVoResult">
 		SELECT 		
 		d.dept_name,SUM(a.apply_num * i.item_price) total_price
@@ -94,18 +112,41 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				and a.dept_id = ${apply.deptId}
 			</if>
 			<!-- 按月查询 DATE_FORMAT(apply_date,'%Y-%m') = '${date}' -->
-			<if test="apply.dateMode == 1">
+			<if test="apply.dateMode == 2">
 				<if test="apply.date != null">
 					and DATE_FORMAT(apply_date,'%Y-%m') = '${apply.date}'
 				</if>
 			</if>
 			<!-- 按年查询 YEAR(apply_date) = '2020' -->
-			<if test="apply.dateMode == 2">
+			<if test="apply.dateMode == 3">
 				<if test="apply.date != null">
-					and YEAR(apply_date) = '${apply.date}'
+					and DATE_FORMAT(apply_date,'%Y') = '${apply.date}'
 				</if>
 			</if>
 		</where>
 		GROUP BY d.dept_name
+	</select>
+	
+	<!-- 合计 -->
+	<select id="countTotalPrice" resultType="decimal">
+		 select ifnull(sum(a.apply_num * i.item_price),0) from apply a
+	left join item i on a.item_id = i.item_id
+		<where>
+			<if	test="apply.deptId != null and apply.deptId != '' and apply.deptId != 1000">
+				and a.dept_id = ${apply.deptId}
+			</if>
+			<!-- 按月查询 DATE_FORMAT(apply_date,'%Y-%m') = '${date}' -->
+			<if test="apply.dateMode == 2">
+				<if test="apply.date != null">
+					and DATE_FORMAT(apply_date,'%Y-%m') = '${apply.date}'
+				</if>
+			</if>
+			<!-- 按年查询 YEAR(apply_date) = '2020' -->
+			<if test="apply.dateMode == 3">
+				<if test="apply.date != null">
+					and DATE_FORMAT(apply_date,'%Y') = '${apply.date}'
+				</if>
+			</if>
+		</where>
 	</select>
 </mapper>

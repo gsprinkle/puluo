@@ -32,16 +32,16 @@ import com.ischoolbar.programmer.apply.vo.ApplyVo;
 @RestController
 @RequestMapping("/apply/apply")
 public class ApplyController {
-	
+
 	@Autowired
 	IApplyService applyService;
 	@Autowired
 	IItemService itemService;
 	@Autowired
 	IEmployeeService employeeService;
+
 	/**
 	 * 列表页面
-	 * 
 	 * @param model
 	 * @return
 	 */
@@ -51,41 +51,8 @@ public class ApplyController {
 		return model;
 	}
 
-	// 统计列表
-	@RequestMapping(value="/summary",method=RequestMethod.GET)
-	public ModelAndView summary(ModelAndView model) {
-		model.setViewName("/apply/apply/summary");
-		return model;
-	}
-	
-	// 图表统计页面
-	@RequestMapping(value="/charts",method=RequestMethod.GET)
-	public ModelAndView charts(ModelAndView model) {
-		model.setViewName("/apply/apply/charts");
-		return model;
-	}
-	
-	// 图表统计列表
-	@RequestMapping(value="/charts",method=RequestMethod.POST)
-	@ResponseBody
-	public List<Map<String,Object>> charts(Apply apply) {
-		List<Map<String,Object>> ret = new ArrayList<>();
-		
-		List<ApplyVo> avList = applyService.selectByChart(apply);
-		for(ApplyVo av : avList) {
-			Map<String,Object> map = new HashMap<>();
-			map.put("deptName", av.getDeptName());
-			map.put("totalPrice", av.getTotalPrice());
-			ret.add(map);
-		}
-		return ret;
-	}
-	
-	
-	
 	/**
 	 * 分页级联查询列表
-	 * 
 	 * @param current
 	 * @param size
 	 * @param apply
@@ -93,60 +60,65 @@ public class ApplyController {
 	 */
 	@RequestMapping(value = "/list", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> list(@RequestParam("page") int current, @RequestParam("rows") int size, Apply apply) {
-		// 设置
+	public Map<String, Object> list(@RequestParam("page") int current, @RequestParam("rows") int size, ApplyVo apply) {
 		Map<String, Object> ret = new HashMap<>();
 		Page<ApplyVo> page = new Page<>();
 		page.setCurrent(current);
 		page.setSize(size);
-		boolean isMonthSummary = apply.getDateMode() == 1;
-		boolean isYearSummary = apply.getDateMode() == 2;
-		boolean isSummary = (isMonthSummary|| isYearSummary);
-		if(isSummary) {
-			page = applyService.selectBySummary(page, apply);
-		}else {
-			page = applyService.selectApplyPageVo(page, apply);
-		}
-		List<ApplyVo> records = page.getRecords();
-		for(ApplyVo av : records) {
-			av.setDate(apply.getDate());
-		}
+		page = applyService.selectApplyPageVo(page, apply);
 		ret.put("total", page.getTotal());
-		ret.put("rows", records);
-		// 汇总价格
-		BigDecimal totalPrice = new BigDecimal("0");
-		for(ApplyVo av : records) {
-			totalPrice = totalPrice.add(av.getTotalPrice());
-		}
-		// 创建Datagrid尾行数据
-		List<Map> footer = new ArrayList<>();
-		Map<String,Object> footerMap = new HashMap<>();
-		String summaryStr = "";
-		if(isMonthSummary)summaryStr="<strong>月汇总</strong>";
-		if(isYearSummary)summaryStr="<strong>年汇总</strong>";
-		if(isSummary) {
-			footerMap.put("cname", summaryStr);
-		}else {
-			footerMap.put("unit", "<strong>当前页面汇总</strong>");
-		}
-		footerMap.put("totalPrice", totalPrice);
-		footer.add(footerMap);		
-		ret.put("footer",footer);
+		ret.put("rows", page.getRecords());
 		return ret;
 	}
 
+
+	/**
+	 * 统计数据
+	 * @param current
+	 * @param size
+	 * @param apply
+	 * @return
+	 */
+	@RequestMapping(value="/summary",method = RequestMethod.POST)
+	public Map<String, Object> summary(@RequestParam("page") int current, @RequestParam("rows") int size,
+			ApplyVo apply) {
+		Map<String, Object> ret = new HashMap<>();
+		Page<ApplyVo> page = new Page<>();
+		page.setCurrent(current);
+		page.setSize(size);
+		page = applyService.selectBySummary(page, apply);
+		ret.put("total", page.getTotal());
+		ret.put("rows", page.getRecords());
+		// 计算合计  分类unit\totalPrice
+		BigDecimal countTotal = applyService.countTotalPrice(apply);
+		List<ApplyVo> footer = new ArrayList<>();
+		ApplyVo av = new ApplyVo();
+		String date = apply.getDate();
+		Integer dateMode = apply.getDateMode();
+		String unit = "";
+		if(dateMode == 2) {
+			unit = date.replaceFirst("-", "年") + "月";
+		}
+		if(dateMode == 3) {
+			unit = date + "年";
+		}
+		av.setUnit(unit + "领用合计");
+		av.setTotalPrice(countTotal);
+		footer.add(av);
+		ret.put("footer",footer);
+		return ret;
+	}
 	/**
 	 * 新增或修改
-	 * 
 	 * @param category
 	 * @return
 	 */
 	@RequestMapping(value = "/saveOrUpdate")
 	@ResponseBody
 	public Map<String, Object> addOrUpdate(Apply apply) {
-		
+
 		Map<String, Object> ret = new HashMap<>();
-		boolean hasId = apply.getApplyId() == null ? false:true;
+		boolean hasId = apply.getApplyId() == null ? false : true;
 		// 设置物品分类和部门
 		Integer cid = itemService.getById(apply.getItemId()).getCid();
 		Integer deptId = employeeService.getById(apply.getEid()).getDeptId();
@@ -157,18 +129,18 @@ public class ApplyController {
 			ret.put("msg", "物品不能为空");
 			return ret;
 		}
-	    
-	    if (apply.getEid() == null) {
+
+		if (apply.getEid() == null) {
 			ret.put("type", "error");
 			ret.put("msg", "领取人不能为空");
 			return ret;
 		}
-	    if (apply.getApplyNum() == null || apply.getApplyNum() == 0) {
+		if (apply.getApplyNum() == null || apply.getApplyNum() == 0) {
 			ret.put("type", "error");
 			ret.put("msg", "请正确填写领取数量");
 			return ret;
 		}
-	    if (apply.getApplyDate() == null) {
+		if (apply.getApplyDate() == null) {
 			ret.put("type", "error");
 			ret.put("msg", "请选择正确的领取日期");
 			return ret;
@@ -185,11 +157,7 @@ public class ApplyController {
 	}
 
 	/**
-	 * 
-	 * 
-	 * 
-	 * /** 删除
-	 * 
+	 * 删除
 	 * @param applyId
 	 * @return
 	 */

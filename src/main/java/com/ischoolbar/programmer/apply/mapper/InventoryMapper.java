@@ -4,6 +4,7 @@ import com.ischoolbar.programmer.apply.entity.Inventory;
 import com.ischoolbar.programmer.apply.vo.InventoryVo;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -23,5 +24,9 @@ public interface InventoryMapper extends BaseMapper<Inventory> {
 	Page<InventoryVo> selectByPage(Page<InventoryVo> page, @Param("inv")InventoryVo inventory);
 	
 	BigDecimal countTotalPrice();
+
+	List<Inventory> initList();
+
+	void truncate();
 
 }

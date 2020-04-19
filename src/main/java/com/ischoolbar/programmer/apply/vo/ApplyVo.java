@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import com.ischoolbar.programmer.apply.entity.Apply;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /** 
 
@@ -16,14 +17,19 @@ import lombok.Data;
 
 */
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class ApplyVo extends Apply{
 	private String cname; 		// 物品分类
 	private String itemName;	// 物品名称
 	private String ename;		// 领取员工
 	private String deptName; 	// 领取部门
-	private BigDecimal itemPrice;		// 单价
+	private BigDecimal itemPrice;	// 单价
 	private String unit;		// 单位
 	private BigDecimal totalPrice;	// 总价格
+	
+    private Integer dateMode;// 1:日期查询，2：月份查询  3：年查询
+    private String date;
+    private String summaryDate;
 	
 	
 }

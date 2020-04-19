@@ -43,27 +43,19 @@ public class InventoryServiceImpl extends ServiceImpl<InventoryMapper, Inventory
 	@Override
 	public Map<String, Object> initialize() {
 		Map<String, Object> ret = new HashMap<>();
-		// 查询所有商品，初始化库存列表
-		List<Item> itemList = itemMapper.selectList(null);
-		// 遍历物品列表，并查看库存中是否已存在该物品，若没有则添加到库存中，库存量默认为0
-		for(Item item : itemList) {
-			List<Inventory> invList = inventoryMapper.selectList(new QueryWrapper<Inventory>().eq("item_id", item.getItemId()));
-			if(invList == null || invList.size()<1){
-				Inventory inv = new Inventory();
-				inv.setInventoryNum(0);
-				inv.setItemId(item.getItemId());
-				baseMapper.insert(inv);
-			}
+		// 初始化库存信息 先清空
+		
+		baseMapper.truncate();
+		
+		List<Inventory> initList = baseMapper.initList();
+		// 库存列表中是否存在该物品，存在修改数量，不存在添加
+		for(Inventory inv : initList) {
+			saveOrUpdate(inv);
 		}
-		// 查询所有采购进货信息，同步数量到库存数据中(待完成)
-		
-		// 查询所有请领信息，同步数据到库存数据中
-		
 		ret.put("type", "success");
 		ret.put("info", "初始化成功");
 		return ret;
 	}
-
 	@Override
 	public Page<InventoryVo> selectByPage(Page<InventoryVo> page, InventoryVo inventory) {
 		

@@ -1,9 +1,11 @@
 package com.ischoolbar.programmer.apply.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import java.time.LocalDate;
-import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+import java.sql.Date;
+
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -28,11 +30,13 @@ public class Stock implements Serializable {
 
     private Integer itemId;
 
-    private LocalDate stockDate;
+    private Date stockDate;
 
     private Integer stockNum;
 
     private String stockRemark;
+    
+    
 
 
 }

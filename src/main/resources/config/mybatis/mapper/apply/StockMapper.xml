@@ -1,5 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ischoolbar.programmer.apply.mapper.StockMapper">
-
+	<!-- stockResultMap-->
+	<resultMap type="com.ischoolbar.programmer.apply.vo.StockVo" id="stockResultMap">
+		<id property="stockId" column="stock_id"/>
+		<result property="stockDate" column="stock_date"/>
+		<result property="summaryDate" column="summary_date"/>
+		<result property="cname" column="cname"/>
+		<result property="itemId" column="item_id"/>
+		<result property="itemName" column="item_name"/>
+		<result property="unit" column="unit"/> 
+		<result property="itemPrice" column="item_price"/>
+		<result property="totalPrice" column="total_price"/>
+		<result property="stockNum" column="stock_num"/>
+		<result property="stockRemark" column="stock_remark"/>
+	</resultMap>
+	
+	<!-- 查询采购列表 -->
+	<select id="selectByPage" resultMap="stockResultMap">
+		select s.*,i.*,c.cname,(i.item_price * s.stock_num) total_price from stock s
+		left join item i on s.item_id = i.item_id
+		left join category c on c.cid = i.cid
+		<where>
+			<if test="stock.date != null and stock.date != ''">
+				<if test="stock.dateMode == 1">
+					and DATE_FORMAT(stock_date,'%Y-%m-%d') = '${stock.date}'
+				</if>
+				<if test="stock.dateMode == 2">
+					and DATE_FORMAT(stock_date,'%Y-%m') = '${stock.date}'
+				</if>
+				<if test="stock.dateMode == 3">
+					and DATE_FORMAT(stock_date,'%Y') = '${stock.date}'
+				</if>
+			</if>
+		</where>
+	</select>
+	<!-- 查询采购统计列表 -->
+	<select id="selectBySummary" resultMap="stockResultMap">
+		SELECT 
+		<if test="stock.dateMode == 2">
+			date_format(s.stock_date,'%Y-%m') summary_date,
+		</if>
+		<if test="stock.dateMode == 3">
+			date_format(s.stock_date,'%Y') summary_date,
+		</if>
+		i.item_name,SUM(s.stock_num) stock_num,
+		sum(i.item_price * s.stock_num) total_price 		
+		from stock s 
+		left JOIN item i on s.item_id = i.item_id
+		<where>
+			<if test="stock.date != null and stock.date != ''">
+				<if test="stock.dateMode == 1">
+					and DATE_FORMAT(stock_date,'%Y-%m-%d') = '${stock.date}'
+				</if>
+				<if test="stock.dateMode == 2">
+					and DATE_FORMAT(stock_date,'%Y-%m') = '${stock.date}'
+				</if>
+				<if test="stock.dateMode == 3">
+					and DATE_FORMAT(stock_date,'%Y') = '${stock.date}'
+				</if>
+			</if>
+		</where>
+		GROUP BY item_name,summary_date
+	</select>
+	<!-- 查询采购合计 -->
+	<select id="countTotalPrice" resultType="decimal">
+		select IFNULL(sum(s.stock_num * i.item_price),0) from stock s
+		left join item i on s.item_id = i.item_id
+		<where>
+			<!-- 按月查询 DATE_FORMAT(stock_date,'%Y-%m') = '${date}' -->
+			<if test="stock.dateMode == 2">
+				<if test="stock.date != null">
+					and DATE_FORMAT(stock_date,'%Y-%m') = '${stock.date}'
+				</if>
+			</if>
+			<!-- 按年查询 YEAR(stock_date) = '2020' -->
+			<if test="stock.dateMode == 3">
+				<if test="stock.date != null">
+					and DATE_FORMAT(stock_date,'%Y') = '${stock.date}'
+				</if>
+			</if>
+		</where>
+	</select>
 </mapper>
