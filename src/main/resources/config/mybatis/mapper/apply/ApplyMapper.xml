@@ -8,21 +8,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<resultMap type="com.ischoolbar.programmer.apply.vo.ApplyVo"
 		id="applyVoResult">
 		<id column="apply_id" property="applyId" />
-		<result column="cid" property="cid" />
-		<result column="item_id" property="itemId" />
 		<result column="apply_num" property="applyNum" />
-		<result column="dept_id" property="deptId" />
-		<result column="eid" property="eid" />
 		<result column="apply_date" property="applyDate" />
-		<result column="summary_date" property="summaryDate" />
 		<result column="apply_remark" property="applyRemark" />
+		<result column="cid" property="cid" />
 		<result column="cname" property="cname" />
+		<result column="item_id" property="itemId" />
 		<result column="item_name" property="itemName" />
 		<result column="item_price" property="itemPrice" />
 		<result column="unit" property="unit" />
-		<result column="ename" property="ename" />
-		<result column="dept_name" property="deptName" />
 		<result column="total_price" property="totalPrice" />
+		<result column="dept_id" property="deptId" />
+		<result column="dept_name" property="deptName" />
+		<result column="eid" property="eid" />
+		<result column="ename" property="ename" />
+		<result column="summary_date" property="summaryDate" />
 	</resultMap>
 
 	<!-- 查询物品请领信息带分页 -->
@@ -68,7 +68,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="apply.dateMode == 3">
 			date_format(apply_date,'%Y') summary_date,
 		</if>
-		i.item_name,i.unit,
+		i.item_name,i.unit,i.item_price,
 		d.dept_name,		
 		SUM(a.apply_num) apply_num,
 		SUM(a.apply_num * i.item_price) total_price
@@ -94,7 +94,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				</if>
 			</if>
 		</where>
-		GROUP BY d.dept_name,i.item_name,i.unit,summary_date
+		GROUP BY d.dept_name,i.item_name,i.unit,i.item_price,summary_date
 		ORDER BY d.dept_name
 	</select>
 	

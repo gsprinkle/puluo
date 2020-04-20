@@ -581,12 +581,22 @@
 				title : '物品名称',
 				width : 100,
 				sortable : true
+			},  {
+				field : 'itemPrice',
+				title : '物品单价',
+				width :100,
+				sortable : true,
+				formatter : function(value) {
+					if (value) {
+						return "¥ " + value.toFixed(2);
+					}
+				}
 			}, {
 				field : 'applyNum',
 				title : '物品数量',
 				width :100,
 				sortable : true
-			},  {
+			},{
 				field : 'unit',
 				title : '物品单位',
 				width : 100,

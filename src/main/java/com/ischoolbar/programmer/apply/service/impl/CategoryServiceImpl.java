@@ -42,7 +42,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 		return baseMapper.selectPageVo(page, category);
 	}
 
-	@Transactional(rollbackFor=Exception.class,propagation=Propagation.SUPPORTS)
+	@Transactional(rollbackFor=Exception.class)
 	@Override
 	public Map<String, Object> deleteByIds(List<Integer> ids) {
 		Map<String, Object> ret = new HashMap<>();
@@ -66,7 +66,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 				itemnum += (int)delitems.get("itemnum");
 				applynum += (int)delitems.get("applynum");
 				stocknum += (int)delitems.get("stocknum");
-				invnum += (int)delitems.get("invnum");
+				invnum +=  ((Integer)delitems.get("invnum") == null) ? 0 : (Integer)delitems.get("invnum");
 				// 再删除自己
 				cnum += baseMapper.deleteById(id);
 				// 拼接 返回 提示字符串
@@ -78,6 +78,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 				+ invnum + " 个库存信息 " ;
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			ret.put("type", "error");
 			ret.put("msg", "删除分类异常，请联系管理员！");
 			return ret;

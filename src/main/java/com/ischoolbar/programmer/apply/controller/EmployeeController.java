@@ -117,7 +117,6 @@ public class EmployeeController {
 	@ResponseBody
 	public Map<String, Object> delete(@RequestParam(value="ids[]",defaultValue="")List<Integer> ids) {
 		return empService.deleteByIds(ids);
-
 	}
 	@RequestMapping("/getEmployeeDropList")
 	@ResponseBody

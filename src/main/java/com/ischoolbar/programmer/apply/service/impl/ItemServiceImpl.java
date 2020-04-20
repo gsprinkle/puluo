@@ -49,7 +49,7 @@ public class ItemServiceImpl extends ServiceImpl<ItemMapper, Item> implements II
 		return baseMapper.selectItemCategoryVo(page, item);
 	}
 
-	@Transactional(rollbackFor=Exception.class,propagation=Propagation.SUPPORTS)
+	@Transactional(rollbackFor=Exception.class)
 	@Override
 	public Map<String, Object> deleteByIds(List<Integer> ids) {
 		Map<String, Object> ret = new HashMap<>();
@@ -70,15 +70,17 @@ public class ItemServiceImpl extends ServiceImpl<ItemMapper, Item> implements II
 			}
 			msg = msg + stocknum + " 个采购信息、" + applynum + " 个领用信息、" + invnum + " 个 库存信息和 " + itemnum + " 个物品信息";  
 		} catch (Exception e) {
+			e.printStackTrace();
 			ret.put("type", "error");
 			ret.put("msg", "删除分类异常，请联系管理员！");
 			return ret;
 		}
 		ret.put("type", "success");
 		ret.put("msg", msg);
-		ret.put("stocknum", stocknum);//采购数量
-		ret.put("applynum", applynum);//领用数量
-		ret.put("itemnum", itemnum);//物品数量
+		ret.put("stocknum", stocknum);	//采购数量
+		ret.put("applynum", applynum);	//领用数量
+		ret.put("invnum", invnum);		//库存数量
+		ret.put("itemnum", itemnum);	//物品数量
 		return ret;
 	}
 

@@ -135,7 +135,7 @@
 		for(var i = 0; i < item.length; i++){
 			ids[i] = item[i].deptId;
 		}
-		$.messager.confirm('信息提示', '确定要删除'+ids.length+'条记录？', function(result) {
+		$.messager.confirm('信息提示', '确定要删除'+ids.length+'条记录？该部门下的所有员工和这些员工相关的领用信息将全部清空，三思而后行', function(result) {
 			if (result) {
 				$.messager.prompt('警告','请输入管理员密码',function(val){
 					if(val == 'puluo'){
