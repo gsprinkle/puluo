@@ -94,37 +94,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				</if>
 			</if>
 		</where>
-		GROUP BY d.dept_name,i.item_name,i.unit,apply_date
+		GROUP BY d.dept_name,i.item_name,i.unit,summary_date
 		ORDER BY d.dept_name
-	</select>
-	
-	<!-- 图表统计 -->
-	<select id="selectByChart" resultMap="applyVoResult">
-		SELECT 		
-		d.dept_name,SUM(a.apply_num * i.item_price) total_price
-		FROM apply a
-		LEFT JOIN item i ON a.item_id = i.item_id
-		LEFT JOIN category c on i.cid = c.cid
-		LEFT JOIN employee e ON a.eid = e.eid
-		left JOIN department d ON e.dept_id = d.dept_id
-		<where>
-			<if	test="apply.deptId != null and apply.deptId != '' and apply.deptId != 1000">
-				and a.dept_id = ${apply.deptId}
-			</if>
-			<!-- 按月查询 DATE_FORMAT(apply_date,'%Y-%m') = '${date}' -->
-			<if test="apply.dateMode == 2">
-				<if test="apply.date != null">
-					and DATE_FORMAT(apply_date,'%Y-%m') = '${apply.date}'
-				</if>
-			</if>
-			<!-- 按年查询 YEAR(apply_date) = '2020' -->
-			<if test="apply.dateMode == 3">
-				<if test="apply.date != null">
-					and DATE_FORMAT(apply_date,'%Y') = '${apply.date}'
-				</if>
-			</if>
-		</where>
-		GROUP BY d.dept_name
 	</select>
 	
 	<!-- 合计 -->

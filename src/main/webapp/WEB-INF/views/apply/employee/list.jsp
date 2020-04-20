@@ -182,26 +182,39 @@
 	 * 删除记录
 	 */
 	function remove() {
-		$.messager.confirm('信息提示', '确定要删除该记录？', function(result) {
+		var item = $('#data-datagrid').datagrid('getSelections');
+		if(item==null || item.length < 1){
+			$.messager.alert('信息提示', "请选择要删除的数据", 'info');
+			return;
+		}
+		// 封装ids
+		var ids = new Array();
+		for(var i = 0; i < item.length; i++){
+			ids[i] = item[i].eid;
+		}
+		$.messager.confirm('信息提示', '确定要删除'+ids.length+'条记录？', function(result) {
 			if (result) {
-				var item = $('#data-datagrid').datagrid('getSelected');
-				$.ajax({
-					url : '../employee/delete',
-					dataType : 'json',
-					type : 'post',
-					data : {
-						eid : item.eid
-					},
-					success : function(data) {
-						if (data.type == 'success') {
-							$.messager.alert('信息提示', '删除成功！', 'info');
-							$('#data-datagrid').datagrid('reload');
-							//关闭tabs
-							closeTabByEmp();
-						} else {
-							$.messager.alert('信息提示', data.msg, 'warning');
-						}
-					}
+				$.messager.prompt('警告','请输入管理员密码',function(val){
+					if(val == 'puluo'){
+						$.ajax({
+							url : '../employee/delete',
+							dataType : 'json',
+							type : 'post',
+							data : {
+								'ids' : ids
+							},
+							success : function(data) {
+								if (data.type == 'success') {
+									$.messager.alert('信息提示', data.msg, 'info');
+									$('#data-datagrid').datagrid('reload');
+									//关闭tabs
+									closeTabByEmp();
+								} else {
+									$.messager.alert('信息提示', data.msg, 'warning');
+								}
+							}
+						});
+					}else{$.messager.alert('信息提示', '密码错误或取消', 'warning');}
 				});
 			}
 		});
@@ -273,7 +286,7 @@
 	$('#data-datagrid').datagrid({
 		url : 'list',
 		rownumbers : true,
-		singleSelect : true,
+		singleSelect : false,
 		pageSize : 20,
 		pagination : true,
 		multiSort : true,

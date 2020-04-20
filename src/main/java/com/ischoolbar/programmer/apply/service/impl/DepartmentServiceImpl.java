@@ -6,6 +6,9 @@ import com.ischoolbar.programmer.apply.service.IDepartmentService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
+import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +27,12 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
 	public Page<Department> selectDepartmentPage(Page<Department> page, @Param("dept")Department department) {
 		// TODO Auto-generated method stub
 		return baseMapper.selectPageVo(page,department);
+	}
+
+	@Override
+	public Map<String, Object> deleteByIds(List<Integer> ids) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

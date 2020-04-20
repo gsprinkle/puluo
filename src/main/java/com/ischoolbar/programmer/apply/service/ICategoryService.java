@@ -1,6 +1,10 @@
 package com.ischoolbar.programmer.apply.service;
 
 import com.ischoolbar.programmer.apply.entity.Category;
+
+import java.util.List;
+import java.util.Map;
+
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -15,4 +19,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ICategoryService extends IService<Category> {
 	IPage<Category> selectCategoryPage(Page<Category> page,Category category);
+
+	Map<String, Object> deleteByIds(List<Integer> ids);
 }

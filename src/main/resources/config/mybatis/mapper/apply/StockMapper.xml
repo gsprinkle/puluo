@@ -44,7 +44,7 @@
 		<if test="stock.dateMode == 3">
 			date_format(s.stock_date,'%Y') summary_date,
 		</if>
-		i.item_name,SUM(s.stock_num) stock_num,
+		i.item_name,i.unit,SUM(s.stock_num) stock_num,
 		sum(i.item_price * s.stock_num) total_price 		
 		from stock s 
 		left JOIN item i on s.item_id = i.item_id
@@ -61,7 +61,7 @@
 				</if>
 			</if>
 		</where>
-		GROUP BY item_name,summary_date
+		GROUP BY item_name,i.unit,summary_date
 	</select>
 	<!-- 查询采购合计 -->
 	<select id="countTotalPrice" resultType="decimal">

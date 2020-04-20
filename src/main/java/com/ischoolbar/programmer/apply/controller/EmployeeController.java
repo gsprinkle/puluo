@@ -115,17 +115,8 @@ public class EmployeeController {
 	 */
 	@RequestMapping(value = "/delete")
 	@ResponseBody
-	public Map<String, Object> delete(Integer eid) {
-		Map<String, Object> ret = new HashMap<>();
-
-		if (!empService.removeById(eid)) {
-			ret.put("type", "error");
-			ret.put("msg", "删除员工异常，请联系管理员！");
-			return ret;
-		}
-		ret.put("type", "success");
-		ret.put("msg", "删除成功！");
-		return ret;
+	public Map<String, Object> delete(@RequestParam(value="ids[]",defaultValue="")List<Integer> ids) {
+		return empService.deleteByIds(ids);
 
 	}
 	@RequestMapping("/getEmployeeDropList")

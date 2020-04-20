@@ -98,7 +98,6 @@
 			$.messager.alert("消息提醒", "请检查你输入的数据!", "warning");
 			return;
 		}
-
 		var data = $("#edit-form").serialize();
 		$.ajax({
 			url : '../category/saveOrUpdate',
@@ -120,30 +119,46 @@
 	}
 
 	/**
-	 * 删除记录
+	 * 批量删除
 	 */
 	function remove() {
-		$.messager.confirm('信息提示', '确定要删除该记录？', function(result) {
+		var item = $('#data-datagrid').datagrid('getSelections');
+		if(item==null || item.length < 1){
+			$.messager.alert('信息提示', "请选择要删除的数据", 'info');
+			return;
+		}
+		// 封装ids
+		var ids = new Array();
+		for(var i = 0; i < item.length; i++){
+			ids[i] = item[i].cid;
+		}
+		$.messager.confirm('信息提示', '确定要删除'+ids.length+'条记录吗？在这些分类下的物品、物品相关的库存、领用、采购信息将一并清空，不可恢复，确定吗？建议修改，而不是删除', function(result) {
 			if (result) {
-				var item = $('#data-datagrid').datagrid('getSelected');
-				$.ajax({
-					url : '../category/delete',
-					dataType : 'json',
-					type : 'post',
-					data : {
-						cid : item.cid
-					},
-					success : function(data) {
-						if (data.type == 'success') {
-							$.messager.alert('信息提示', '删除成功！', 'info');
-							$('#data-datagrid').datagrid('reload');
-							// 关闭tabs
-							closeTabByCategory();
-						} else {
-							$.messager.alert('信息提示', data.msg, 'warning');
-						}
+				$.messager.prompt('警告','请输入管理员密码',function(val){
+					if(val == 'puluo'){
+						$.ajax({
+							url : '../category/delete',
+							dataType : 'json',
+							type : 'post',
+							data : {
+								'ids' : ids
+							},
+							success : function(data) {
+								if (data.type == 'success') {
+									$.messager.alert('信息提示', data.msg, 'info');
+									$('#data-datagrid').datagrid('reload');
+									// 关闭tabs
+									closeTabByCategory();
+								} else {
+									$.messager.alert('信息提示', data.msg, 'warning');
+								}
+							}
+						});
+					}else{
+						$.messager.alert('信息提示', '密码错误或取消', 'warning');
 					}
 				});
+				
 			}
 		});
 	}
@@ -176,12 +191,15 @@
 	 */
 	function openEdit() {
 		//$('#edit-form').form('clear');
-		var item = $('#data-datagrid').datagrid('getSelected');
+		var item = $('#data-datagrid').datagrid('getSelections');
 		if (item == null || item.length == 0) {
 			$.messager.alert('信息提示', '请选择要修改的数据！', 'info');
 			return;
 		}
-
+		if(item.length > 1){
+			$.messager.alert('信息提示', '只能选择一行数据！', 'info');
+			return;
+		}
 		$('#edit-dialog').dialog(
 				{
 					closed : false,
@@ -199,9 +217,9 @@
 						}
 					} ],
 					onBeforeOpen : function() {
-						$("#edit-id").val(item.cid);
-						$("#edit-name").val(item.cname);
-						$("#edit-remark").val(item.cremark);
+						$("#edit-id").val(item[0].cid);
+						$("#edit-name").val(item[0].cname);
+						$("#edit-remark").val(item[0].cremark);
 					}
 				});
 	}
@@ -219,12 +237,12 @@
 	$('#data-datagrid').datagrid({
 		url : 'list',
 		rownumbers : true,
-		singleSelect : true,
+		singleSelect : false,
 		pageSize : 20,
 		pagination : true,
 		multiSort : true,
 		fitColumns : true,
-		idField : 'id',
+		idField : 'cid',
 		fit : true,
 		columns : [ [ {
 			field : 'chk',

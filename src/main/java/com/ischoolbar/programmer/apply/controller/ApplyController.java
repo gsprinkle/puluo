@@ -163,17 +163,9 @@ public class ApplyController {
 	 */
 	@RequestMapping(value = "/delete")
 	@ResponseBody
-	public Map<String, Object> delete(Integer applyId) {
-		Map<String, Object> ret = new HashMap<>();
+	public Map<String, Object> delete(@RequestParam(value="ids[]",defaultValue="")List<Integer> ids) {
+		return applyService.deleteByIds(ids);
 
-		if (!applyService.removeById(applyId)) {
-			ret.put("type", "error");
-			ret.put("msg", "删除物品异常，请联系管理员！");
-			return ret;
-		}
-		ret.put("type", "success");
-		ret.put("msg", "删除成功！");
-		return ret;
 	}
 
 }

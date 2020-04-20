@@ -108,16 +108,9 @@ public class DepartmentController {
 	 */
 	@RequestMapping(value = "/delete")
 	@ResponseBody
-	public Map<String, Object> delete(Integer deptId) {
-		Map<String, Object> ret = new HashMap<>();
-		if (!deptService.removeById(deptId)) {
-			ret.put("type", "error");
-			ret.put("msg", "删除部门异常，请联系管理员！");
-			return ret;
-		}
-		ret.put("type", "success");
-		ret.put("msg", "删除成功！");
-		return ret;
+	public Map<String, Object> delete(@RequestParam(value="ids[]",defaultValue="")List<Integer> ids) {
+		return deptService.deleteByIds(ids);
+
 	}
 
 	/**

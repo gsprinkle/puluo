@@ -18,6 +18,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ischoolbar.programmer.apply.entity.Category;
 import com.ischoolbar.programmer.apply.service.ICategoryService;
+import com.ischoolbar.programmer.apply.service.IItemService;
 
 
 /**
@@ -34,6 +35,10 @@ public class CategoryController {
 	
 	@Autowired
 	ICategoryService categoryService;
+	@Autowired
+	IItemService itemService;
+	
+	
 
 	/**
 	 * 列表页面
@@ -103,18 +108,8 @@ public class CategoryController {
 	 */
 	@RequestMapping(value="/delete")
 	@ResponseBody
-	public Map<String,Object> delete(Integer cid){
-		Map<String,Object> ret = new HashMap<>();
-		
-		if(!categoryService.removeById(cid)){
-			ret.put("type", "error");
-			ret.put("msg", "删除分类异常，请联系管理员！");
-			return ret;
-		}
-		ret.put("type", "success");
-		ret.put("msg", "删除成功！");
-		return ret;
-		
+	public Map<String,Object> delete(@RequestParam(value="ids[]",defaultValue="")List<Integer> ids){
+		return categoryService.deleteByIds(ids);
 	}
 	
 	/**

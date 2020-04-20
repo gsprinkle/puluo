@@ -2,8 +2,10 @@ package com.ischoolbar.programmer.apply.service.impl;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -43,6 +45,13 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyMapper, Apply> implements
 	public BigDecimal countTotalPrice(Apply apply) {
 		// TODO Auto-generated method stub
 		return baseMapper.countTotalPrice(apply);
+	}
+
+	@Transactional(rollbackFor=Exception.class)
+	@Override
+	public Map<String, Object> deleteByIds(List<Integer> ids) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

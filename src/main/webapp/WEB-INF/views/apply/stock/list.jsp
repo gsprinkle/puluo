@@ -52,12 +52,6 @@
 	style="width: 450px; padding: 10px;">
 	<form id="add-form" method="post">
 		<table>
-<!--   
-    private Date stockDate;
-    private Integer itemId;
-    private Integer stockNum;
-    private String stockRemark; 
--->
 			<!--  日期  -->
 			<tr>
 				<td width="60" align="right">日期:</td>
@@ -205,6 +199,7 @@
 					$.messager.alert('信息提示', '添加成功！', 'info');
 					$('#add-dialog').dialog('close');
 					$('#data-datagrid').datagrid('reload');
+					closeTab("库存管理");
 				} else {
 					$.messager.alert('信息提示', data.msg, 'warning');
 				}
@@ -216,30 +211,40 @@
 	 * 删除记录
 	 */
 	function remove() {
-		var item = $('#data-datagrid').datagrid('getSelected');
-		if (!item) {
-			$.messager.alert('信息提示', '请选择要删除的数据！', 'info');
+		var item = $('#data-datagrid').datagrid('getSelections');
+		if(item==null || item.length < 1){
+			$.messager.alert('信息提示', "请选择要删除的数据", 'info');
 			return;
 		}
-		$.messager.confirm('信息提示', '确定要删除该记录？', function(result) {
+		// 封装ids
+		var ids = new Array();
+		for(var i = 0; i < item.length; i++){
+			ids[i] = item[i].stockId;
+		}
+		$.messager.confirm('信息提示', '确定要删除'+ids.length+'条记录？', function(result) {
 			if (result) {
-				var item = $('#data-datagrid').datagrid('getSelected');
-				$.ajax({
-					url : '../stock/delete',
-					dataType : 'json',
-					type : 'post',
-					data : {
-						stockId : item.stockId
-					},
-					success : function(data) {
-						if (data.type == 'success') {
-							$.messager.alert('信息提示', '删除成功！', 'info');
-							$('#data-datagrid').datagrid('reload');
-						} else {
-							$.messager.alert('信息提示', data.msg, 'warning');
-						}
-					}
+				$.messager.prompt('警告','请输入管理员密码',function(val){
+					if(val == 'puluo'){
+						$.ajax({
+							url : '../stock/delete',
+							dataType : 'json',
+							type : 'post',
+							data : {
+								'ids' : ids
+							},
+							success : function(data) {
+								if (data.type == 'success') {
+									$.messager.alert('信息提示', data.msg, 'info');
+									$('#data-datagrid').datagrid('reload');
+									closeTab("库存管理");
+								} else {
+									$.messager.alert('信息提示', data.msg, 'warning');
+								}
+							}
+						});
+					}else{$.messager.alert('信息提示', '密码错误或取消', 'warning');}
 				});
+				
 			}
 		});
 	}
@@ -273,7 +278,7 @@
 	$('#data-datagrid').datagrid({
 		url : 'list',
 		rownumbers : true,
-		singleSelect : true,
+		singleSelect : false,
 		pageList : [20,40,60,80,100],
 		pageSize : 100,
 		pagination : true,
@@ -307,12 +312,6 @@
 			width : 100,
 			sortable : true,
 		}, {
-			field : 'unit',
-			title : '单位',
-			width : 100,
-			sortable : true,
-			editor : 'text'
-		},{
 			field : 'itemPrice',
 			title : '单价',
 			width : 100,
@@ -328,6 +327,11 @@
 			width : 100,
 			sortable : true,
 			editor : 'text'
+		},{
+			field : 'unit',
+			title : '单位',
+			width : 100,
+			sortable : true,
 		},{
 			field : 'totalPrice',
 			title : '总价',
@@ -377,12 +381,12 @@
 			success : function() {
 				$("#data-datagrid").datagrid('endEdit', editIndex);
 				$("#data-datagrid").datagrid('reload');
+				$('#summary-datagrid').datagrid('reload');
 				editIndex = undefined;
-				// 刷新库存列表
-				setTimeout("parent.reloadTabGrid('库存盘点')",50);
+				// 关闭tabs
+				closeTab("库存管理");
 			}
 		});
-
 	}
 	// 双击开启行编辑
 	function onDblClickRow(index) {
@@ -411,6 +415,7 @@
 			editIndex = undefined;
 			$("#data-datagrid").datagrid('endEdit', editIndex);
 			$("#data-datagrid").datagrid('reload');
+			$('#summary-datagrid').datagrid('reload');
 		}
 	}
 	
@@ -427,25 +432,16 @@
 		idField : 'stockId',
 		fit : true,
 		showFooter : false,
-		queryParams : {
-			'dateMode' : $("#dateMode").val(),
-			'date' : $("#date").val(),
-		},
-		columns : [ [ {
-			field : 'summaryDate',
-			title : '采购日期',
+		queryParams : {'dateMode' : $("#dateMode").val(), 'date' : $("#date").val()},
+		columns : [ [ 
+			{field : 'summaryDate',title : '采购日期',width : 100,sortable : true},   
+			{field : 'itemName',title : '物品名称',width : 100,sortable : true}, 
+			{field : 'stockNum',title : '采购数量',width : 100,sortable : true},
+			{
+			field : 'unit',
+			title : '单位',
 			width : 100,
-			sortable : true
-		},   {
-			field : 'itemName',
-			title : '物品名称',
-			width : 100,
-			sortable : true
-		}, {
-			field : 'stockNum',
-			title : '采购数量',
-			width : 100,
-			sortable : true
+			sortable : true,
 		},{
 			field : 'totalPrice',
 			title : '总价',
@@ -464,7 +460,7 @@
 		}, ] ],
 		onLoadSuccess : function(data) {
 			if(data.footer[0]){
-				$('#lbSummary').text(data.footer[0].cname +': '+ data.footer[0].totalPrice + '元');
+				$('#lbSummary').text(data.footer[0].unit +': '+ data.footer[0].totalPrice + '元');
 			}
 		}
 	});

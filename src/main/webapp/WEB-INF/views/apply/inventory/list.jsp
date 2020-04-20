@@ -68,6 +68,7 @@ function dispalyEasyUILoad() {
 		url : 'list',
 		rownumbers : true,
 		singleSelect : true,
+		pageList : [20,50,80,100],
 		pageSize : 20,
 		pagination : true,
 		multiSort : true,
@@ -87,17 +88,12 @@ function dispalyEasyUILoad() {
 			title : '物品名称',
 			width : 100,
 			sortable : true
-		}, {
-			field : 'cid',
-			title : '分类id',
-			width : 100,
-			sortable : true,
-			hidden : true
-		}, {
+		},  {
 			field : 'inventoryNum',
 			title : '剩余库存',
 			width : 60,
 			sortable : true,
+			editor : "text"
 		},  {
 			field : 'unit',
 			title : '单位',
@@ -164,8 +160,19 @@ function dispalyEasyUILoad() {
 			}
 		}
 	}
+	// 单击 结束编辑
 	function onClickRow(){
 		endEditing();
+	}
+	
+	// 保存结束编辑
+	function save(){
+		endEditing();
+	}
+	// 取消结束编辑
+	function cancel(){
+		$("#data-datagrid").datagrid('endEdit',editIndex);
+		editIndex = undefined;
 	}
 
 	/**

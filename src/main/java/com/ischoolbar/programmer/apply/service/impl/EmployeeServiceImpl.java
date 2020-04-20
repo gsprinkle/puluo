@@ -1,5 +1,8 @@
 package com.ischoolbar.programmer.apply.service.impl;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -22,5 +25,11 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
 	@Override
 	public Page<EmployeeDepartmentVo> selectEmployeeDepartmentVo(Page<EmployeeDepartmentVo> page, Employee emp) {
 		return baseMapper.selectEmployeeDepartmentVo(page, emp);
+	}
+
+	@Override
+	public Map<String, Object> deleteByIds(List<Integer> ids) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

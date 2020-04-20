@@ -303,6 +303,7 @@
 						$.messager.alert('信息提示', '添加成功！', 'info');
 						$('#add-dialog').dialog('close');
 						$('#data-datagrid').datagrid('reload');
+						$('#summary-datagrid').datagrid('reload');
 						/*关闭tabs*/
 						closeTabByApply();
 					} else {
@@ -333,6 +334,7 @@
 						$.messager.alert('信息提示', '修改成功！', 'info');
 						$('#edit-dialog').dialog('close');
 						$('#data-datagrid').datagrid('reload');
+						$('#summary-datagrid').datagrid('reload');
 						/*关闭tabs*/
 						closeTabByApply();
 					} else {
@@ -346,26 +348,40 @@
 		 * 删除记录
 		 */
 		function remove() {
-			$.messager.confirm('信息提示', '确定要删除该记录？', function(result) {
+			var item = $('#data-datagrid').datagrid('getSelections');
+			if(item==null || item.length < 1){
+				$.messager.alert('信息提示', "请选择要删除的数据", 'info');
+				return;
+			}
+			// 封装ids
+			var ids = new Array();
+			for(var i = 0; i < item.length; i++){
+				ids[i] = item[i].applyId;
+			}
+			$.messager.confirm('信息提示', '确定要删除'+ids.length+'条记录？', function(result) {
 				if (result) {
-					var item = $('#data-datagrid').datagrid('getSelected');
-					$.ajax({
-						url : '../apply/delete',
-						dataType : 'json',
-						type : 'post',
-						data : {
-							applyId : item.applyId
-						},
-						success : function(data) {
-							if (data.type == 'success') {
-								$.messager.alert('信息提示', '删除成功！', 'info');
-								$('#data-datagrid').datagrid('reload');
-								/*关闭tabs*/
-								closeTabByApply();
-							} else {
-								$.messager.alert('信息提示', data.msg, 'warning');
-							}
-						}
+					$.messager.prompt('警告','请输入管理员密码',function(val){
+						if(val == 'puluo'){
+							$.ajax({
+								url : '../apply/delete',
+								dataType : 'json',
+								type : 'post',
+								data : {
+									'ids' : ids
+								},
+								success : function(data) {
+									if (data.type == 'success') {
+										$.messager.alert('信息提示', data.msg, 'info');
+										$('#data-datagrid').datagrid('reload');
+										$('#summary-datagrid').datagrid('reload');
+										/*关闭tabs*/
+										closeTabByApply();
+									} else {
+										$.messager.alert('信息提示', data.msg, 'warning');
+									}
+								}
+							});
+						}else{$.messager.alert('信息提示', '密码错误或取消', 'warning');}
 					});
 				}
 			});
@@ -446,12 +462,12 @@
 		$('#data-datagrid').datagrid({
 			url : 'list',
 			rownumbers : true,
-			singleSelect : true,
+			singleSelect : false,
 			pageSize : 100,
 			pageList : [ 20, 40, 60, 80, 100 ],
 			pagination : true,
 			multiSort : true,
-			fitColumns : true,
+			fitColumns : false,
 			idField : 'applyId',
 			fit : true,
 			queryParams : {
@@ -464,7 +480,7 @@
 			}, {
 				field : 'applyDate',
 				title : '领取日期',
-				width : 100,
+				//width : 100,
 				sortable : true,
 				formatter : function(value) {
 					if (value) {
@@ -474,38 +490,32 @@
 			}, {
 				field : 'cname',
 				title : '物品分类',
-				width : 100,
+				//width : 100,
 				sortable : true
 			}, {
 				field : 'itemName',
 				title : '物品名称',
-				width : 100,
+				//width : 100,
 				sortable : true
 			}, {
 				field : 'deptName',
 				title : '领取部门',
-				width : 100,
+				//width : 100,
 				sortable : true
 			}, {
 				field : 'ename',
 				title : '领取员工',
-				width : 100,
+				//width : 100,
 				sortable : true
-			}, {
-				field : 'eid',
-				title : '员工',
-				width : 100,
-				sortable : true,
-				hidden : true
-			}, {
+			},{
 				field : 'applyNum',
 				title : '领取数量',
-				width : 100,
+				//width : 60,
 				sortable : true
 			}, {
 				field : 'itemPrice',
 				title : '单价',
-				width : 100,
+				//width : 60,
 				sortable : true,
 				formatter : function(value) {
 					if (value) {
@@ -513,32 +523,14 @@
 					}
 				}
 			}, {
-				field : 'cid',
-				title : '物品分类ID',
-				width : 100,
-				sortable : true,
-				hidden : true
-			}, {
-				field : 'itemId',
-				title : '物品ID',
-				width : 100,
-				sortable : true,
-				hidden : true
-			}, {
-				field : 'deptId',
-				title : '部门ID',
-				width : 100,
-				sortable : true,
-				hidden : true
-			}, {
 				field : 'unit',
 				title : '单位',
-				width : 100,
+				//width : 50,
 				sortable : true
 			}, {
 				field : 'totalPrice',
 				title : '总价',
-				width : 100,
+				//width : 80,
 				sortable : true,
 				formatter : function(value) {
 					if (value) {
@@ -548,7 +540,7 @@
 			}, {
 				field : 'applyRemark',
 				title : '备注',
-				width : 100,
+				//width : 100,
 				sortable : true
 			}, ] ],
 			onLoadSuccess : function(data) {
@@ -586,13 +578,13 @@
 				sortable : true
 			}, {
 				field : 'itemName',
-				title : '物品分类',
+				title : '物品名称',
 				width : 100,
 				sortable : true
 			}, {
 				field : 'applyNum',
 				title : '物品数量',
-				width : 100,
+				width :100,
 				sortable : true
 			},  {
 				field : 'unit',

@@ -92,14 +92,14 @@ public class StockController {
 		StockVo sv = new StockVo();
 		String date = stock.getDate();
 		Integer dateMode = stock.getDateMode();
-		String cname = "";
+		String unit = "";
 		if(dateMode == 2) {
-			cname = date.replaceFirst("-", "年") + "月";
+			unit = date.replaceFirst("-", "年") + "月";
 		}
 		if(dateMode == 3) {
-			cname = date + "年";
+			unit = date + "年";
 		}
-		sv.setCname(cname + "采购合计");
+		sv.setUnit(unit + "采购合计");
 		sv.setTotalPrice(countTotal);
 		footer.add(sv);
 		ret.put("footer",footer);
@@ -126,8 +126,7 @@ public class StockController {
 	 */
 	@RequestMapping(value = "/delete")
 	@ResponseBody
-	public Map<String, Object> delete(Integer stockId) {
-
-		return stockService.delete(stockId);
+	public Map<String, Object> delete(@RequestParam(value="ids[]",defaultValue="")List<Integer> ids) {
+		return stockService.deleteByIds(ids);
 	}
 }

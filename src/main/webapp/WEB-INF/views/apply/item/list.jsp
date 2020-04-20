@@ -54,7 +54,7 @@
 			<tr>
 				<td width="60" align="right">单价:</td>
 				<td><input type="text" id="add-price" name="itemPrice" class="easyui-numberbox easyui-validatebox"
-					data-options="precision:2,required:true, missingMessage:'物品价格，只可填写数字'" /> 
+					data-options="precision:2,required:true, missingMessage:'物品价格，只可填写数字'" />
 			</tr>
 			<!-- 备注 -->
 			<tr>
@@ -97,7 +97,7 @@
 			<tr>
 				<td width="60" align="right">单价:</td>
 				<td><input type="text" id="edit-price" name="itemPrice" class="easyui-numberbox easyui-validatebox"
-					data-options="precision:2,required:true, missingMessage:'物品价格，只可填写数字'" /> 
+					data-options="precision:2,required:true, missingMessage:'物品价格，只可填写数字'" />
 			</tr>
 			<!-- 备注 -->
 			<tr>
@@ -196,31 +196,44 @@
 	}
 
 	/**
-	 * 删除记录
+	 * 批量删除记录
 	 */
 	function remove() {
-		$.messager.confirm('信息提示', '确定要删除该记录？', function(result) {
+		var item = $('#data-datagrid').datagrid('getSelections');
+		if(item==null || item.length < 1){
+			$.messager.alert('信息提示', "请选择要删除的数据", 'info');
+			return;
+		}
+		// 封装ids
+		var ids = new Array();
+		for(var i = 0; i < item.length; i++){
+			ids[i] = item[i].itemId;
+		}
+		$.messager.confirm('信息提示', '确定要删除'+ids.length+'条记录？删除后，这些 物品所对应的【采购信息】、【领用信息】、【库存信息】将全部清空，三思而后行！', function(result) {
 			if (result) {
-				var item = $('#data-datagrid').datagrid('getSelected');
-				$.ajax({
-					url : '../item/delete',
-					dataType : 'json',
-					type : 'post',
-					data : {
-						itemId : item.itemId
-					},
-					success : function(data) {
-						if (data.type == 'success') {
-							$.messager.alert('信息提示', '删除成功！', 'info');
-							$('#data-datagrid').datagrid('reload');
-							// 关闭tabs
-							closeTabByItem();
-						} else {
-							$.messager.alert('信息提示', data.msg, 'warning');
-						}
-					}
-				});
-			}
+				$.messager.prompt('警告','请输入管理员密码',function(val){
+					if(val == 'puluo'){
+						$.ajax({
+							url : '../item/delete',
+							dataType : 'json',
+							type : 'post',
+							data : {
+								'ids' : ids
+							},
+							success : function(data) {
+								if (data.type == 'success') {
+									$.messager.alert('信息提示', data.msg, 'info');
+									$('#data-datagrid').datagrid('reload');
+									// 关闭tabs
+									closeTabByItem();
+								} else {
+									$.messager.alert('信息提示', data.msg, 'warning');
+								}
+							}
+						});
+					}else{$.messager.alert('信息提示', '密码错误或取消', 'warning');}
+			});
+	}
 		});
 	}
 
@@ -290,7 +303,7 @@
 	$('#data-datagrid').datagrid({
 		url : 'list',
 		rownumbers : true,
-		singleSelect : true,
+		singleSelect : false,
 		pageSize : 100,
 		pageList : [20,40,60,80,100],
 		pagination : true,

@@ -74,41 +74,7 @@ public class ItemController {
 	@RequestMapping(value = "/saveOrUpdate")
 	@ResponseBody
 	public Map<String, Object> addOrUpdate(Item item) {
-		boolean hasId = item.getItemId() == null ? false : true;
-		Map<String, Object> ret = new HashMap<>();
-		if (StringUtils.isEmpty(item.getItemName())) {
-			ret.put("type", "error");
-			ret.put("msg", "物品名不能为空");
-			return ret;
-		}
-		if (!hasId && isExist(item.getItemName())) {
-			ret.put("type", "error");
-			ret.put("msg", "该物品已经存在，请重新输入！");
-			return ret;
-		}
-		if(item.getItemPrice() == null || item.getItemPrice().equals(0)){
-			ret.put("type", "error");
-			ret.put("msg", "价格不能为空或0，请重新输入！");
-			return ret;
-		}
-		if(item.getCid() == null || item.getCid() == 0){
-			ret.put("type", "error");
-			ret.put("msg", "请选择物品的分类！");
-			return ret;
-		}
-		if(StringUtils.isEmpty(item.getUnit())){
-			ret.put("type", "error");
-			ret.put("msg", "请填写物品的单位！");
-			return ret;
-		}
-		if (!itemService.saveOrUpdate(item)) {
-			ret.put("type", "error");
-			ret.put("msg", "新增物品异常，请联系管理员！");
-			return ret;
-		}
-		ret.put("type", "success");
-		ret.put("msg", hasId ? "物品修改成功！" : "物品添加成功！");
-		return ret;
+		return itemService.addOrUpdate(item);
 
 	}/**
 
@@ -122,18 +88,8 @@ public class ItemController {
 	 */
 	@RequestMapping(value = "/delete")
 	@ResponseBody
-	public Map<String, Object> delete(Integer itemId) {
-		Map<String, Object> ret = new HashMap<>();
-
-		if (!itemService.removeById(itemId)) {
-			ret.put("type", "error");
-			ret.put("msg", "删除物品异常，请联系管理员！");
-			return ret;
-		}
-		ret.put("type", "success");
-		ret.put("msg", "删除成功！");
-		return ret;
-
+	public Map<String, Object> delete(@RequestParam(value="ids[]",defaultValue="")List<Integer> ids) {
+		return itemService.deleteByIds(ids);
 	}
 	
 	/**
@@ -146,13 +102,5 @@ public class ItemController {
 		return itemService.list();
 	}
 
-	/**
-	 * 判断该物品名称是否在数据库中已存在
-	 * 
-	 * @param cName
-	 * @return
-	 */
-	private boolean isExist(String itemName) {
-		return itemService.getOne(new QueryWrapper<Item>().eq("item_name", itemName)) == null ? false : true;
-	}
+	
 }

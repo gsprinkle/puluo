@@ -4,6 +4,7 @@ import com.ischoolbar.programmer.apply.entity.Stock;
 import com.ischoolbar.programmer.apply.vo.StockVo;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -28,5 +29,7 @@ public interface IStockService extends IService<Stock> {
 	Page<StockVo> selectBySummary(Page<StockVo> page, StockVo stock);
 
 	BigDecimal countTotalPrice(StockVo stock);
+
+	Map<String, Object> deleteByIds(List<Integer> ids);
 
 }
