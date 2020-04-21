@@ -82,7 +82,13 @@
 						var data = $('#add-cc-item').combobox('getData');
 						if(data && data.length >0){
 							$('#add-cc-item').combobox('setValue',data[0].itemId);
+							$('#itemUnit').text(data[0].unit);
+							$('#show-item-price').text(data[0].itemPrice);
 						}
+					},
+					onSelect : function(data){
+						$('#itemUnit').text(data.unit);
+						$('#show-item-price').text(data.itemPrice);
 					}
 					" />
 					</td>
@@ -91,9 +97,18 @@
 				<tr>
 					<td width="60" align="right">数量:</td>
 					<td><input type="text" name="applyNum" class="easyui-numberbox easyui-validatebox"
-						data-options="required:true, missingMessage:'物品数量，只可填写数字',value:1" /></td>
+						data-options="required:true, missingMessage:'必填',value:1" /></td>
 				</tr>
-				<!-- 部门 dept_id 略-->
+				
+				<!-- 显示单位--> <!-- 显示单价 -->
+				<tr>
+					<td></td>
+					<td align="left">
+						单位：<span id="itemUnit" style="margin:5px 20px 5px 0;color:#0add00"></span>
+						单价：<span id="show-item-price" style="margin:5px 20px 5px 0;color:#0add00"></span>
+					</td>
+				</tr>
+				
 				<!-- 领取员工 eid -->
 				<tr>
 					<td width="60" align="right">领取人:</td>
@@ -325,7 +340,7 @@
 		 * 删除记录
 		 */
 		function remove() {
-			var item = $('#data-datagrid').datagrid('getSelections');
+			var item = $('#data-datagrid').datagrid('getChecked');
 			if (item == null || item.length < 1) {
 				$.messager.alert('信息提示', "请选择要删除的数据", 'info');
 				return;
@@ -349,8 +364,7 @@
 								$.messager.alert('信息提示', data.msg,
 										'info');
 								$('#data-datagrid').datagrid('reload');
-								$('#summary-datagrid').datagrid(
-										'reload');
+								$('#summary-datagrid').datagrid('reload');
 								/*关闭tabs*/
 								closeTabByApply();
 							} else {
@@ -465,11 +479,14 @@
 			url : 'list',
 			rownumbers : true,
 			singleSelect : false,
+			checkOnSelect : true,
+			selectOnCheck :true,
 			pageSize : 100,
 			pageList : [ 20, 40, 60, 80, 100 ],
 			pagination : true,
 			multiSort : true,
 			fitColumns : false,
+			
 			idField : 'applyId',
 			fit : true,
 			onDblClickRow : onDblClickRow,
@@ -555,6 +572,7 @@
 			}, ] ],
 			onLoadSuccess : function(data) {
 				$('#data-datagrid').datagrid('unselectAll');
+				$('#data-datagrid').datagrid('clearChecked');
 			}
 		});
 

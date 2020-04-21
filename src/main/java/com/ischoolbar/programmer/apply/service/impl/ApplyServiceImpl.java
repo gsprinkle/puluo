@@ -67,6 +67,9 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyMapper, Apply> implements
 			// 首先更新库存，领用信息删除后，库存应该增加相应的物品数量
 			// 先查出该条领用信息
 			Apply apply = baseMapper.selectById(id);
+			if(apply == null) {
+				continue;
+			}
 			// 查出对应的库存对象
 			Inventory inv = inventoryMapper.selectOne(new QueryWrapper<Inventory>().eq("item_id", apply.getItemId()));
 			if(inv == null){
