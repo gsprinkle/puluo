@@ -9,8 +9,8 @@
 		</div>
 		<div class="wu-toolbar-search">
 			<label>物品名称:</label><input id="search-name" onkeyup="changeName()" class="wu-text" style="width: 100px">
+			<input type="button" onclick="formatUnit()" value="去掉1" />
 			<!-- <a href="#" id="search-btn"	class="easyui-linkbutton" iconCls="icon-search">搜索</a> -->
-			<label>物品分类：</label><input id="search-combobox-cid" type="text" />
 		</div>
 
 	</div>
@@ -29,15 +29,6 @@
 	<form id="add-form" method="post">
 		<table>
 
-			<!-- 物品分类 -->
-			<tr>
-				<td width="60" align="right">物品分类：</td>
-				<td><input type="text" name="cid" class="easyui-combobox"
-					data-options="required:true, missingMessage:'请从下拉框中选择物品',
-					valueField:'cid',textField:'cname',editable:false,
-					url:'${ctx }/apply/category/getCategoryDropList',method:'post'" />
-				</td>
-			</tr>
 			<!-- 物品名称 -->
 			<tr>
 				<td width="60" align="right">物品名称:</td>
@@ -72,15 +63,6 @@
 	<form id="edit-form" method="post">
 		<input type="hidden" name="itemId" id="edit-id">
 		<table>
-			<!-- 物品分类 -->
-			<tr>
-				<td width="60" align="right">物品分类：</td>
-				<td><input type="text" id="edit-cid" name="cid" class="easyui-combobox"
-					data-options="required:true, missingMessage:'请从下拉框中选择物品',
-					valueField:'cid',textField:'cname',editable:false,
-					url:'${ctx }/apply/category/getCategoryDropList',method:'post'" />
-				</td>
-			</tr>
 			<!-- 物品名称 -->
 			<tr>
 				<td width="60" align="right">物品名称:</td>
@@ -114,22 +96,6 @@
 <!-- End of easyui-dialog -->
 <script type="text/javascript">
 
-	// 页面加载完成,分类监听
-	$(function(){
-		$("#search-combobox-cid").combobox({
-			url : '../category/getCategoryDropList',
-			valueField:'cid',
-			textField :'cname',
-			editable:false,
-			onSelect : function(){
-				$('#data-datagrid').datagrid('reload',{
-					cid : $("#search-combobox-cid").combobox('getValue')
-				});
-			}
-		});
-		
-	});
-	
 	function changeName(){
 		$('#data-datagrid').datagrid('reload',{
 			itemName :　$("#search-name").val()
@@ -304,7 +270,7 @@
 		url : 'list',
 		rownumbers : true,
 		singleSelect : false,
-		pageSize : 100,
+		pageSize : 20,
 		pageList : [20,40,60,80,100],
 		pagination : true,
 		multiSort : true,
@@ -320,17 +286,6 @@
 			width : 100,
 			sortable : true
 		}, {
-			field : 'cname',
-			title : '物品分类',
-			width : 100,
-			sortable : true
-		}, {
-			field : 'cid',
-			title : '分类id',
-			width : 100,
-			sortable : true,
-			hidden : true
-		},{
 			field : 'unit',
 			title : '物品单位',
 			width : 100,
@@ -359,5 +314,19 @@
 		closeTab('库存管理');
 		closeTab('领用管理');
 		closeTab('采购管理');
+	}
+	
+	function formatUnit(){
+		$.ajax({
+			url : '../item/formatUnit',
+			dataType : 'json',
+			type : 'post',
+			success : function(data){
+				if (data.type == 'success') {
+					$.messager.alert('信息提示', data.msg, 'info');
+					$('#data-datagrid').datagrid('reload');
+				}
+			}
+		})
 	}
 </script>

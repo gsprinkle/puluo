@@ -104,11 +104,11 @@ public class ItemServiceImpl extends ServiceImpl<ItemMapper, Item> implements II
 			ret.put("msg", "价格不能为空或0，请重新输入！");
 			return ret;
 		}
-		if(item.getCid() == null || item.getCid() == 0){
+		/*if(item.getCid() == null || item.getCid() == 0){
 			ret.put("type", "error");
 			ret.put("msg", "请选择物品的分类！");
 			return ret;
-		}
+		}*/
 		if(StringUtils.isEmpty(item.getUnit())){
 			ret.put("type", "error");
 			ret.put("msg", "请填写物品的单位！");

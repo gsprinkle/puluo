@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@include file="../../common/header.jsp"%>
 <script type="text/javascript" src="${ctx }/resources/js/datagrid-export.js"></script>
@@ -10,8 +9,7 @@
 			<%@include file="../../common/menus.jsp"%>
 		</div>
 		<div class="wu-toolbar-search">
-			<label>部门:</label> <input id="search-department"
-				class="easyui-combobox" type="text"
+			<label>部门:</label> <input id="search-department" class="easyui-combobox" type="text"
 				data-options="
 			url:'../department/getDepartmentDropList',
 			valueField:'deptId',textField:'deptName',
@@ -24,28 +22,24 @@
 			">
 			<!-- 日期模式 -->
 			<label>日期模式:<input type="radio" id="dayModel" name="dateRadio" value="1">日
-			</label> <label><input type="radio" checked="checked"
-				name="dateRadio" value="2">月</label> <label
-				style="margin-right: 30px;"><input type="radio"
-				name="dateRadio" value="3">年</label>
+			</label> <label><input type="radio" checked="checked" name="dateRadio" value="2">月</label> <label
+				style="margin-right: 30px;"><input type="radio" name="dateRadio" value="3">年</label>
 			<!-- 选择日期 -->
-			<label>选择日期:</label>
-			<input id="search-date" type="text" />
+			<label>选择日期:</label> <input id="search-date" type="text" />
 			<!-- 日期模式 默认为月 -->
 			<input type="hidden" id="dateMode" value="2" />
 			<!-- 日期参数 -->
 			<input type="hidden" id="date" />
 			<!-- 统计 -->
-			<input type="button" onclick="openWindow()" value="统计" />
+			<a href="#" onclick="openWindow()" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-chart-bar'" >统计</a>
 		</div>
 	</div>
 
 	<!-- summary toolbar -->
 	<div id="summary-toolbar">
 		<div>
-			<label id="lbSummary" style="color:'#ff8888'"></label>
-			<label style="margin:0 5px;">  </label>
-			<a id="btn-export" href="#" class="easyui-linkbutton" data-options="plain:true">导出Excel</a>
+			<label id="lbSummary" style="color: '#ff8888'"></label> <label style="margin: 0 5px;"> </label> <a id="btn-export"
+				href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-chart-curve'">导出Excel</a>
 		</div>
 	</div>
 	<!-- End of toolbar -->
@@ -58,32 +52,27 @@
 	<!-- Begin of easyui-dialog -->
 
 	<!-- 统计datagrid -->
-	<div id="summary-dialog" class="easyui-dialog"
-		data-options="closed:true,iconCls:'icon-chart-pie'">
+	<div id="summary-dialog" class="easyui-dialog" data-options="closed:true,iconCls:'icon-chart-pie'">
 		<table id="summary-datagrid" class="easyui-datagrid" toolbar="#summary-toolbar"></table>
 	</div>
 
 	<!-- 添加领用对话框 -->
-	<div id="add-dialog" class="easyui-dialog"
-		data-options="closed:true,iconCls:'icon-save'"
+	<div id="add-dialog" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'"
 		style="width: 450px; padding: 10px;">
 		<form id="add-form" method="post">
 			<table>
-				<!-- 物品分类  cid  略-->
 				<!-- 领取日期 apply_date -->
 				<tr>
 					<td width="60" align="right">领取日期:</td>
 					<td><input type="text" name="applyDate" class="easyui-datebox"
 						data-options="required:true,
 					missingMessage:'请选择领取日期',
-					value:getCurDate()" />
-					</td>
+					value:getCurDate()" /></td>
 				</tr>
 				<!-- 物品名称 item_id -->
 				<tr>
 					<td width="70" align="right">物品:</td>
-					<td><input type="text" id="add-cc-item" name="itemId"
-						class="easyui-combobox"
+					<td><input type="text" id="add-cc-item" name="itemId" class="easyui-combobox"
 						data-options="required:true, 
 					missingMessage:'请从下拉框中选择物品',
 					valueField:'itemId',
@@ -101,10 +90,8 @@
 				<!-- 领取数量  apply_num -->
 				<tr>
 					<td width="60" align="right">数量:</td>
-					<td><input type="text" name="applyNum"
-						class="easyui-numberbox easyui-validatebox"
-						data-options="required:true, missingMessage:'物品数量，只可填写数字',value:1" />
-					</td>
+					<td><input type="text" name="applyNum" class="easyui-numberbox easyui-validatebox"
+						data-options="required:true, missingMessage:'物品数量，只可填写数字',value:1" /></td>
 				</tr>
 				<!-- 部门 dept_id 略-->
 				<!-- 领取员工 eid -->
@@ -122,8 +109,7 @@
 				<!-- 备注  apply_remark -->
 				<tr>
 					<td align="right">备注:</td>
-					<td><textarea name="itemRemark" rows="6" class="wu-textarea"
-							style="width: 260px"></textarea></td>
+					<td><textarea name="itemRemark" rows="6" class="wu-textarea" style="width: 260px"></textarea></td>
 				</tr>
 			</table>
 		</form>
@@ -131,28 +117,23 @@
 
 
 	<!-- 修改窗口 -->
-	<div id="edit-dialog" class="easyui-dialog"
-		data-options="closed:true,iconCls:'icon-save'"
+	<div id="edit-dialog" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'"
 		style="width: 450px; padding: 10px;">
 		<form id="edit-form" method="post">
 			<table>
-				<!-- 物品分类  cid  略-->
 				<input type="hidden" name="applyId" id="edit-applyId" />
 				<!-- 领取日期 apply_date -->
 				<tr>
 					<td width="60" align="right">领取日期:</td>
-					<td><input type="text" id="edit-applyDate" name="applyDate"
-						class="easyui-datebox"
+					<td><input type="text" id="edit-applyDate" name="applyDate" class="easyui-datebox"
 						data-options="required:true,
 					missingMessage:'请选择领取日期',
-					value:getCurDate()" />
-					</td>
+					value:getCurDate()" /></td>
 				</tr>
 				<!-- 物品名称 item_id -->
 				<tr>
 					<td width="70" align="right">物品:</td>
-					<td><input type="text" id="edit-itemId" name="itemId"
-						class="easyui-combobox"
+					<td><input type="text" id="edit-itemId" name="itemId" class="easyui-combobox"
 						data-options="required:true, 
 					missingMessage:'请从下拉框中选择物品',
 					valueField:'itemId',
@@ -164,16 +145,14 @@
 				<!-- 领取数量  apply_num -->
 				<tr>
 					<td width="60" align="right">数量:</td>
-					<td><input type="text" id="edit-applyNum" name="applyNum"
-						class="easyui-numberbox easyui-validatebox"
+					<td><input type="text" id="edit-applyNum" name="applyNum" class="easyui-numberbox easyui-validatebox"
 						data-options="required:true, missingMessage:'物品数量，只可填写数字'," /></td>
 				</tr>
 				<!-- 部门 dept_id 略-->
 				<!-- 领取员工 eid -->
 				<tr>
 					<td width="60" align="right">领取人:</td>
-					<td><input type="text" name="eid" id="edit-eid"
-						class="easyui-combobox"
+					<td><input type="text" name="eid" id="edit-eid" class="easyui-combobox"
 						data-options="required:true, 
 					missingMessage:'请选择领取人',
 					url : '../employee/getEmployeeDropList',
@@ -185,8 +164,7 @@
 				<!-- 备注  apply_remark -->
 				<tr>
 					<td align="right">备注:</td>
-					<td><textarea name="applyRemark" id="edit-applyRemark"
-							rows="6" class="wu-textarea" style="width: 260px"></textarea></td>
+					<td><textarea name="applyRemark" id="edit-applyRemark" rows="6" class="wu-textarea" style="width: 260px"></textarea></td>
 				</tr>
 			</table>
 		</form>
@@ -335,8 +313,7 @@
 						$('#edit-dialog').dialog('close');
 						$('#data-datagrid').datagrid('reload');
 						$('#summary-datagrid').datagrid('reload');
-						/*关闭tabs*/
-						closeTabByApply();
+						
 					} else {
 						$.messager.alert('信息提示', data.msg, 'warning');
 					}
@@ -349,39 +326,38 @@
 		 */
 		function remove() {
 			var item = $('#data-datagrid').datagrid('getSelections');
-			if(item==null || item.length < 1){
+			if (item == null || item.length < 1) {
 				$.messager.alert('信息提示', "请选择要删除的数据", 'info');
 				return;
 			}
 			// 封装ids
 			var ids = new Array();
-			for(var i = 0; i < item.length; i++){
+			for (var i = 0; i < item.length; i++) {
 				ids[i] = item[i].applyId;
 			}
-			$.messager.confirm('信息提示', '确定要删除'+ids.length+'条记录？', function(result) {
+			$.messager.confirm('信息提示', '确定要删除' + ids.length + '条记录？', function(result) {
 				if (result) {
-					$.messager.prompt('警告','请输入管理员密码',function(val){
-						if(val == 'puluo'){
-							$.ajax({
-								url : '../apply/delete',
-								dataType : 'json',
-								type : 'post',
-								data : {
-									'ids' : ids
-								},
-								success : function(data) {
-									if (data.type == 'success') {
-										$.messager.alert('信息提示', data.msg, 'info');
-										$('#data-datagrid').datagrid('reload');
-										$('#summary-datagrid').datagrid('reload');
-										/*关闭tabs*/
-										closeTabByApply();
-									} else {
-										$.messager.alert('信息提示', data.msg, 'warning');
-									}
-								}
-							});
-						}else{$.messager.alert('信息提示', '密码错误或取消', 'warning');}
+					$.ajax({
+						url : '../apply/delete',
+						dataType : 'json',
+						type : 'post',
+						data : {
+							'ids' : ids
+						},
+						success : function(data) {
+							if (data.type == 'success') {
+								$.messager.alert('信息提示', data.msg,
+										'info');
+								$('#data-datagrid').datagrid('reload');
+								$('#summary-datagrid').datagrid(
+										'reload');
+								/*关闭tabs*/
+								closeTabByApply();
+							} else {
+								$.messager.alert('信息提示', data.msg,
+										'warning');
+							}
+						}
 					});
 				}
 			});
@@ -410,51 +386,77 @@
 			});
 		}
 
-		/**
-		 * 打开修改窗口
-		 */
-		function openEdit() {
-			//$('#edit-form').form('clear');
-			var item = $('#data-datagrid').datagrid('getSelected');
-			if (item == null || item.length == 0) {
-				$.messager.alert('信息提示', '请选择要修改的数据！', 'info');
-				return;
+		// 编辑行 索引
+		var editIndex = undefined;
+		// 结束行编辑
+		function endEditing() {
+			if (editIndex == undefined) {
+				return true;
 			}
+			// 获取选择的值
+			// 要修改的领用ID
+			var applyId = $("#data-datagrid").datagrid('getData').rows[editIndex].applyId;
+			// 要修改的物品ID
+			var itemId = $("#data-datagrid").datagrid('getData').rows[editIndex].itemId;
+			// 要修改的员工
+			var eid = $("#data-datagrid").datagrid('getData').rows[editIndex].eid;
 
-			$('#edit-dialog')
-					.dialog(
-							{
-								closed : false,
-								modal : true,
-								title : "修改信息",
-								buttons : [ {
-									text : '确定',
-									iconCls : 'icon-ok',
-									handler : edit
-								}, {
-									text : '取消',
-									iconCls : 'icon-cancel',
-									handler : function() {
-										$('#edit-dialog').dialog('close');
-									}
-								} ],
-								onBeforeOpen : function() {
-									$("#edit-applyId").val(item.applyId);
-									$("#edit-itemId").combobox('setValue',
-											item.itemId);
-									$("#edit-eid").combobox('setValue',
-											item.eid);
-									$("#edit-applyNum").numberbox("setValue",
-											item.applyNum);
-									$("#edit-applyDate")
-											.datebox(
-													'setValue',
-													myformatter(new Date(
-															item.applyDate)));
-									$("#edit-applyRemark")
-											.val(item.applyRemark);
-								}
-							});
+			// 获取编辑器对象
+			var eNum = $("#data-datagrid").datagrid('getEditor', {
+				index : editIndex,
+				field : 'applyNum'
+			});
+			
+			// 从编辑器对象中获取最新的领用数量
+			var applyNum = $(eNum.target).val();
+			$.ajax({
+				url : 'saveOrUpdate',
+				dataType : 'json',
+				data : {
+					'applyId' : applyId,
+					'applyNum' : applyNum,
+					'itemId' : itemId,
+					'eid' : eid
+				},
+				success : function() {
+					$("#data-datagrid").datagrid('endEdit', editIndex);
+					$("#data-datagrid").datagrid('reload');
+					$("#summary-datagrid").datagrid('reload');
+					editIndex = undefined;
+					/*关闭tabs*/
+					closeTabByApply();
+				}
+			});
+		}
+		// 双击开启行编辑
+		function onDblClickRow(index) {
+			if (editIndex != index) {
+				if (endEditing()) {
+					$("#data-datagrid").datagrid('beginEdit', index);
+					editIndex = index;
+				} else {
+					$('#data-datagrid').datagrid('selectRow', editIndex);
+				}
+			}
+		}
+		// 单击其它的行，结束编辑
+		function onClickRow() {
+			endEditing();
+		}
+		// 编辑好之后保存
+		function save() {
+			endEditing();
+		}
+		// 编辑完之后，取消保存
+		function cancel() {
+			if (editIndex == undefined) {
+				return;
+			} else {
+				editIndex = undefined;
+				$("#data-datagrid").datagrid('endEdit', editIndex);
+				$("#data-datagrid").datagrid('reload');
+				$('#summary-datagrid').datagrid('reload');
+			}
 		}
 		/** 
 		 * 载入数据
@@ -470,6 +472,8 @@
 			fitColumns : false,
 			idField : 'applyId',
 			fit : true,
+			onDblClickRow : onDblClickRow,
+			onClickRow : onClickRow,
 			queryParams : {
 				'dateMode' : $("#dateMode").val(),
 				'date' : $("#date").val(),
@@ -480,42 +484,42 @@
 			}, {
 				field : 'applyDate',
 				title : '领取日期',
-				//width : 100,
+				width : 100,
 				sortable : true,
 				formatter : function(value) {
 					if (value) {
 						return myformatter(new Date(value));
 					}
 				}
-			}, {
-				field : 'cname',
-				title : '物品分类',
-				//width : 100,
-				sortable : true
-			}, {
-				field : 'itemName',
+			},  {
+				field : 'itemId',
 				title : '物品名称',
-				//width : 100,
-				sortable : true
+				width : 100,
+				sortable : true,
+				formatter :function(val,row){
+					if(val){
+						return row.itemName;
+					}
+				}
 			}, {
 				field : 'deptName',
 				title : '领取部门',
-				//width : 100,
+				width : 100,
 				sortable : true
 			}, {
-				field : 'ename',
+				field : 'eid',
 				title : '领取员工',
-				//width : 100,
-				sortable : true
-			},{
-				field : 'applyNum',
-				title : '领取数量',
-				//width : 60,
-				sortable : true
+				width : 100,
+				sortable : true,
+				formatter : function(val,row){
+					if(val){
+						return row.ename;
+					}
+				}
 			}, {
 				field : 'itemPrice',
 				title : '单价',
-				//width : 60,
+				width : 60,
 				sortable : true,
 				formatter : function(value) {
 					if (value) {
@@ -523,14 +527,20 @@
 					}
 				}
 			}, {
+				field : 'applyNum',
+				title : '领取数量',
+				width : 60,
+				sortable : true,
+				editor : "text"
+			}, {
 				field : 'unit',
 				title : '单位',
-				//width : 50,
+				width : 50,
 				sortable : true
 			}, {
 				field : 'totalPrice',
 				title : '总价',
-				//width : 80,
+				width : 80,
 				sortable : true,
 				formatter : function(value) {
 					if (value) {
@@ -547,115 +557,118 @@
 				$('#data-datagrid').datagrid('unselectAll');
 			}
 		});
-		
-		
+
 		/*统计列表 summary-datagrid  */
-		$('#summary-datagrid').datagrid({
-			url : 'summary',
-			rownumbers : true,
-			singleSelect : true,
-			pageSize : 100,
-			pageList : [ 20, 40, 60, 80, 100 ],
-			pagination : true,
-			multiSort : true,
-			fitColumns : true,
-			idField : 'applyId',
-			fit : true,
-			showFooter : false,
-			queryParams : {
-				'dateMode' : $("#dateMode").val(),
-				'date' : $("#date").val(),
-			},
-			columns : [ [ {
-				field : 'summaryDate',
-				title : '领取日期',
-				width : 100,
-				sortable : true
-			},  {
-				field : 'deptName',
-				title : '领取部门',
-				width : 100,
-				sortable : true
-			}, {
-				field : 'itemName',
-				title : '物品名称',
-				width : 100,
-				sortable : true
-			},  {
-				field : 'itemPrice',
-				title : '物品单价',
-				width :100,
-				sortable : true,
-				formatter : function(value) {
-					if (value) {
-						return "¥ " + value.toFixed(2);
+		$('#summary-datagrid').datagrid(
+				{
+					url : 'summary',
+					rownumbers : true,
+					singleSelect : true,
+					pageSize : 100,
+					pageList : [ 20, 40, 60, 80, 100 ],
+					pagination : true,
+					multiSort : true,
+					fitColumns : true,
+					idField : 'applyId',
+					fit : true,
+					showFooter : false,
+					queryParams : {
+						'dateMode' : $("#dateMode").val(),
+						'date' : $("#date").val(),
+					},
+					columns : [ [ {
+						field : 'summaryDate',
+						title : '领取日期',
+						width : 100,
+						sortable : true
+					}, {
+						field : 'deptName',
+						title : '领取部门',
+						width : 100,
+						sortable : true
+					}, {
+						field : 'itemName',
+						title : '物品名称',
+						width : 100,
+						sortable : true
+					}, {
+						field : 'itemPrice',
+						title : '物品单价',
+						width : 100,
+						sortable : true,
+						formatter : function(value) {
+							if (value) {
+								return "¥ " + value.toFixed(2);
+							}
+						}
+					}, {
+						field : 'applyNum',
+						title : '物品数量',
+						width : 100,
+						sortable : true
+					}, {
+						field : 'unit',
+						title : '物品单位',
+						width : 100,
+						sortable : true
+					}, {
+						field : 'totalPrice',
+						title : '总价',
+						width : 100,
+						sortable : true,
+						formatter : function(value) {
+							if (value) {
+								return "¥ " + value.toFixed(2);
+							}
+						}
+					}, {
+						field : 'applyRemark',
+						title : '备注',
+						width : 100,
+						sortable : true
+					}, ] ],
+					onLoadSuccess : function(data) {
+						if (data.footer[0]) {
+							$('#lbSummary').text(
+									data.footer[0].unit + ': '
+											+ data.footer[0].totalPrice + '元');
+						}
 					}
-				}
-			}, {
-				field : 'applyNum',
-				title : '物品数量',
-				width :100,
-				sortable : true
-			},{
-				field : 'unit',
-				title : '物品单位',
-				width : 100,
-				sortable : true
-			}, {
-				field : 'totalPrice',
-				title : '总价',
-				width : 100,
-				sortable : true,
-				formatter : function(value) {
-					if (value) {
-						return "¥ " + value.toFixed(2);
-					}
-				}
-			}, {
-				field : 'applyRemark',
-				title : '备注',
-				width : 100,
-				sortable : true
-			}, ] ],
-			onLoadSuccess : function(data) {
-				if(data.footer[0]){
-					$('#lbSummary').text(data.footer[0].unit +': '+ data.footer[0].totalPrice + '元');
-				}
-			}
-		});
-		
+				});
+
 		/*打开统计datagrid窗口*/
 		function openWindow() {
 			// 禁用日模式
-			$("#dayModel").attr("disabled",true);
+			$("#dayModel").attr("disabled", true);
 			$("#summary-dialog").dialog({
 				title : '领用统计',
 				closed : false,
 				resizable : true,
 				height : 400,
 				width : 650,
-				onClose : function(){
+				onClose : function() {
 					// 启用日模式
-					$("#dayModel").attr("disabled",false);
+					$("#dayModel").attr("disabled", false);
 				}
 
 			});
 		}
 		/*导出Excel*/
-		$('#btn-export').click(function(){
-			 var date = $('#date').val();
-			 var dateMode = $('#dateMode').val();
-			 var name ='';
-			 if(dateMode == 2){
-				 name = date + '月领用统计.xls';
-			 }if(dateMode == 3){
-				 name = date + '年领用统计.xls';
-			 }
-			 $('#summary-datagrid').datagrid('toExcel',name);
-		 });
-		
+		$('#btn-export').click(function() {
+			var date = $('#date').val();
+			var dateMode = $('#dateMode').val();
+			var name = '';
+			if (dateMode == 2) {
+				name = date + '月领用统计.xls';
+			}
+			if (dateMode == 3) {
+				name = date + '年领用统计.xls';
+			}
+			$('#summary-datagrid').datagrid('toExcel', name);
+		});
+
 		/*关闭tabs*/
-		function closeTabByApply(){
+		function closeTabByApply() {
 			closeTab('库存管理');
 		}
 	</script>

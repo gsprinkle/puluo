@@ -237,7 +237,7 @@
 		pageSize : 20,
 		pagination : true,
 		multiSort : true,
-		fitColumns : true,
+		fitColumns : false,
 		idField : 'deptId',
 		fit : true,
 		columns : [ [ {

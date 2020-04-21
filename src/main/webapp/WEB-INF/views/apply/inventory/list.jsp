@@ -78,12 +78,7 @@ function dispalyEasyUILoad() {
 		columns : [ [ {
 			field : 'chk',
 			checkbox : true
-		}, {
-			field : 'cname',
-			title : '物品分类',
-			width : 100,
-			sortable : true,
-		}, {
+		},{
 			field : 'itemName',
 			title : '物品名称',
 			width : 100,
@@ -284,9 +279,6 @@ function dispalyEasyUILoad() {
 			$.messager.alert('Warning', "只能勾选一个分类");
 			return;
 		}
-		// console.log(node);
-		// 填充 产品 分类 表单项
-		$("#add-item-cid").val(node[0].id);
 
 		$('#add-dialog').dialog({
 			closed : false,
@@ -335,7 +327,6 @@ function dispalyEasyUILoad() {
 			onBeforeOpen : function() {
 				$("#edit-id").val(item.itemId);
 				$("#edit-brand").combobox("setValue", item.brandId);
-				$("#edit-cid").combobox("setValue", item.cid);
 				$("#edit-name").val(item.itemName);
 				$("#edit-remark").val(item.itemRemark);
 			}

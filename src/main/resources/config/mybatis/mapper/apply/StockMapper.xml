@@ -6,7 +6,6 @@
 		<id property="stockId" column="stock_id"/>
 		<result property="stockDate" column="stock_date"/>
 		<result property="summaryDate" column="summary_date"/>
-		<result property="cname" column="cname"/>
 		<result property="itemId" column="item_id"/>
 		<result property="itemName" column="item_name"/>
 		<result property="unit" column="unit"/> 
@@ -18,9 +17,8 @@
 	
 	<!-- 查询采购列表 -->
 	<select id="selectByPage" resultMap="stockResultMap">
-		select s.*,i.*,c.cname,(i.item_price * s.stock_num) total_price from stock s
-		left join item i on s.item_id = i.item_id
-		left join category c on c.cid = i.cid
+		select s.*,i.*,(i.item_price * s.stock_num) total_price from stock s
+		left join item i on s.item_id = i.item_id		
 		<where>
 			<if test="stock.date != null and stock.date != ''">
 				<if test="stock.dateMode == 1">
@@ -38,6 +36,9 @@
 	<!-- 查询采购统计列表 -->
 	<select id="selectBySummary" resultMap="stockResultMap">
 		SELECT 
+		<if test="stock.dateMode == 1">
+			date_format(s.stock_date,'%Y-%m-%d') summary_date,
+		</if>
 		<if test="stock.dateMode == 2">
 			date_format(s.stock_date,'%Y-%m') summary_date,
 		</if>
@@ -68,13 +69,18 @@
 		select IFNULL(sum(s.stock_num * i.item_price),0) from stock s
 		left join item i on s.item_id = i.item_id
 		<where>
+			<if test="stock.dateMode == 1">
+				<if test="stock.date != null">
+					and DATE_FORMAT(stock_date,'%Y-%m-%d') = '${stock.date}'
+				</if>
+			</if>
 			<!-- 按月查询 DATE_FORMAT(stock_date,'%Y-%m') = '${date}' -->
 			<if test="stock.dateMode == 2">
 				<if test="stock.date != null">
 					and DATE_FORMAT(stock_date,'%Y-%m') = '${stock.date}'
 				</if>
 			</if>
-			<!-- 按年查询 YEAR(stock_date) = '2020' -->
+			<!-- 按年查询 YEAR(stock_date,'%Y') = '2020' -->
 			<if test="stock.dateMode == 3">
 				<if test="stock.date != null">
 					and DATE_FORMAT(stock_date,'%Y') = '${stock.date}'

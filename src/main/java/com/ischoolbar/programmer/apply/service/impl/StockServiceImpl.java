@@ -80,30 +80,36 @@ public class StockServiceImpl extends ServiceImpl<StockMapper, Stock> implements
 				ret.put("msg", "添加成功！");
 			}
 		}
-		
 		return ret;
 	}
 	
-	@Override
-	public Map<String, Object> deleteByIds(List<Integer> ids) {
-		return null;
-	}
 
 	@Override
-	public Map<String, Object> delete(Integer stockId) {
+	public Map<String, Object> deleteByIds(List<Integer> ids) {
 		Map<String, Object> ret = new HashMap<>();
+		int stockNum = 0;
+		// 迭代删除
 		// 删除采购数据的同时，库存中对应的物品数量要减掉删除的数量
-		Stock oldStock = baseMapper.selectById(stockId);
-		Inventory inv = inventoryMapper.selectOne(new QueryWrapper<Inventory>().eq("item_id", oldStock.getItemId()));
-		inv.setInventoryNum(inv.getInventoryNum() - oldStock.getStockNum());
-		inventoryMapper.updateById(inv);
-		if (baseMapper.deleteById(stockId) < 1) {
-			ret.put("type", "error");
-			ret.put("msg", "删除库存异常，请联系管理员！");
-			return ret;
+		for(Integer id : ids){
+			Stock oldStock = baseMapper.selectById(id);
+			Inventory inv = inventoryMapper.selectOne(new QueryWrapper<Inventory>().eq("item_id", oldStock.getItemId()));
+			if(inv == null){
+				ret.put("type", "error");
+				ret.put("msg", "库存数据损坏，请先初始化库存");
+				return ret;
+			}
+			inv.setInventoryNum(inv.getInventoryNum() - oldStock.getStockNum());
+			inventoryMapper.updateById(inv);
+			
+			if (baseMapper.deleteById(id) < 1) {
+				ret.put("type", "error");
+				ret.put("msg", "删除库存异常，请联系管理员！");
+				return ret;
+			}
+			stockNum ++;
 		}
 		ret.put("type", "success");
-		ret.put("msg", "删除成功！");
+		ret.put("msg", "删除成功！共删除 " + stockNum +" 条记录");
 		return ret;
 	}
 

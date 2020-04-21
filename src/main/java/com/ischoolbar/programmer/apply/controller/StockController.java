@@ -86,7 +86,7 @@ public class StockController {
 		page = stockService.selectBySummary(page, stock);
 		ret.put("total", page.getTotal());
 		ret.put("rows", page.getRecords());
-		// 计算合计  分类cname\totalPrice
+		// 计算合计  分类unit\totalPrice
 		BigDecimal countTotal = stockService.countTotalPrice(stock);
 		List<StockVo> footer = new ArrayList<>();
 		StockVo sv = new StockVo();

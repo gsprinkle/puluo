@@ -16,5 +16,4 @@ import lombok.Data;
 @Data
 public class ItemCategoryVo extends Item {
 
-	private String cname;	// 分类名称
 }

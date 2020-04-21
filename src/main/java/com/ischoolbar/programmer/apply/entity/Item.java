@@ -32,9 +32,7 @@ public class Item {
     private String unit;
 
     private BigDecimal itemPrice;
-
     private Integer cid;
-
     private String itemRemark;
 
 }

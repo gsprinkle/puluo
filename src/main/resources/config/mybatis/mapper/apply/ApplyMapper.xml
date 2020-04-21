@@ -11,8 +11,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result column="apply_num" property="applyNum" />
 		<result column="apply_date" property="applyDate" />
 		<result column="apply_remark" property="applyRemark" />
-		<result column="cid" property="cid" />
-		<result column="cname" property="cname" />
 		<result column="item_id" property="itemId" />
 		<result column="item_name" property="itemName" />
 		<result column="item_price" property="itemPrice" />
@@ -28,13 +26,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- 查询物品请领信息带分页 -->
 	<select id="selectApplyPageVo" resultMap="applyVoResult">
 		SELECT
-		a.*,i.item_name,i.item_price,i.unit,c.cname,e.ename,d.dept_name,(a.apply_num
+		a.*,i.item_name,i.item_price,i.unit,e.ename,d.dept_name,(a.apply_num
 		*
 		i.item_price) total_price
 		FROM apply a
 		LEFT JOIN item i ON a.item_id =
 		i.item_id
-		LEFT JOIN category c on i.cid = c.cid
 		LEFT JOIN employee e ON
 		a.eid = e.eid
 		left JOIN department d ON e.dept_id = d.dept_id
@@ -74,7 +71,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		SUM(a.apply_num * i.item_price) total_price
 		FROM apply a
 		LEFT JOIN item i ON a.item_id = i.item_id
-		LEFT JOIN category c on i.cid = c.cid
 		LEFT JOIN employee e ON a.eid = e.eid
 		left JOIN department d ON e.dept_id = d.dept_id
 		<where>

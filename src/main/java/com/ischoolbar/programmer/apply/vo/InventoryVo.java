@@ -17,6 +17,4 @@ public class InventoryVo extends Inventory {
 	private BigDecimal itemPrice; // 商品单价
 	private String unit;			// 商品单位
 	private BigDecimal totalPrice; // 单个商品的总价格
-	private Integer cid;
-	private String cname; // 商品分类名称
 }

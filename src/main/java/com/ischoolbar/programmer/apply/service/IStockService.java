@@ -22,8 +22,6 @@ public interface IStockService extends IService<Stock> {
 
 	Map<String, Object> addOrUpdate(Stock stock);
 
-	Map<String, Object> delete(Integer stockId);
-
 	Page<StockVo> selectByPage(Page<StockVo> page, Stock stock);
 
 	Page<StockVo> selectBySummary(Page<StockVo> page, StockVo stock);

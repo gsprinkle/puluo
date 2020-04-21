@@ -116,44 +116,7 @@ public class ApplyController {
 	@RequestMapping(value = "/saveOrUpdate")
 	@ResponseBody
 	public Map<String, Object> addOrUpdate(Apply apply) {
-
-		Map<String, Object> ret = new HashMap<>();
-		boolean hasId = apply.getApplyId() == null ? false : true;
-		// 设置物品分类和部门
-		Integer cid = itemService.getById(apply.getItemId()).getCid();
-		Integer deptId = employeeService.getById(apply.getEid()).getDeptId();
-		apply.setCid(cid);
-		apply.setDeptId(deptId);
-		if (apply.getItemId() == null) {
-			ret.put("type", "error");
-			ret.put("msg", "物品不能为空");
-			return ret;
-		}
-
-		if (apply.getEid() == null) {
-			ret.put("type", "error");
-			ret.put("msg", "领取人不能为空");
-			return ret;
-		}
-		if (apply.getApplyNum() == null || apply.getApplyNum() == 0) {
-			ret.put("type", "error");
-			ret.put("msg", "请正确填写领取数量");
-			return ret;
-		}
-		if (apply.getApplyDate() == null) {
-			ret.put("type", "error");
-			ret.put("msg", "请选择正确的领取日期");
-			return ret;
-		}
-		if (!applyService.saveOrUpdate(apply)) {
-			ret.put("type", "error");
-			ret.put("msg", "新增或修改异常，请联系管理员！");
-			return ret;
-		}
-		ret.put("type", "success");
-		ret.put("msg", hasId ? "修改成功！" : "添加成功！");
-		return ret;
-
+		return applyService.addOrUpdate(apply);
 	}
 
 	/**

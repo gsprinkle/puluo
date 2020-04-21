@@ -22,14 +22,14 @@
 			<!-- 日期参数 -->
 			<input type="hidden" id="date" />
 			<!-- 统计 -->
-			<input type="button" onclick="openWindow()" value="统计" />
+			<a href="#" onclick="openWindow()" class="easyui-linkbutton c3" data-options="plain:true,iconCls:'icon-chart-bar'" >统计</a>
 		</div>
 	</div>
 	<div id="summary-toolbar">
 		<div>
 			<label id="lbSummary" style="color:'#ff8888'"></label>
 			<label style="margin:0 5px;">  </label>
-			<a id="btn-export" href="#" class="easyui-linkbutton" data-options="plain:true">导出Excel</a>
+			<a id="btn-export" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-chart-curve'">导出Excel</a>
 		</div>
 	</div>
 	<!-- End of toolbar -->
@@ -223,28 +223,23 @@
 		}
 		$.messager.confirm('信息提示', '确定要删除'+ids.length+'条记录？', function(result) {
 			if (result) {
-				$.messager.prompt('警告','请输入管理员密码',function(val){
-					if(val == 'puluo'){
-						$.ajax({
-							url : '../stock/delete',
-							dataType : 'json',
-							type : 'post',
-							data : {
-								'ids' : ids
-							},
-							success : function(data) {
-								if (data.type == 'success') {
-									$.messager.alert('信息提示', data.msg, 'info');
-									$('#data-datagrid').datagrid('reload');
-									closeTab("库存管理");
-								} else {
-									$.messager.alert('信息提示', data.msg, 'warning');
-								}
-							}
-						});
-					}else{$.messager.alert('信息提示', '密码错误或取消', 'warning');}
+				$.ajax({
+					url : '../stock/delete',
+					dataType : 'json',
+					type : 'post',
+					data : {
+						'ids' : ids
+					},
+					success : function(data) {
+						if (data.type == 'success') {
+							$.messager.alert('信息提示', data.msg, 'info');
+							$('#data-datagrid').datagrid('reload');
+							closeTab("库存管理");
+						} else {
+							$.messager.alert('信息提示', data.msg, 'warning');
+						}
+					}
 				});
-				
 			}
 		});
 	}
@@ -301,12 +296,7 @@
 			formatter : function(value){
 				return myformatter(new Date(value));
 			}
-		},  {
-			field : 'cname',
-			title : '物品分类',
-			width : 100,
-			sortable : true,
-		},  {
+		}, {
 			field : 'itemName',
 			title : '物品名称',
 			width : 100,
@@ -354,6 +344,7 @@
 		onDblClickRow : onDblClickRow,
 		onClickRow :onClickRow
 	});
+	
 	// 编辑行 索引
 	var editIndex = undefined;
 	// 结束行编辑

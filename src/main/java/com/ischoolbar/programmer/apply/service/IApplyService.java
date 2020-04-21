@@ -22,9 +22,9 @@ public interface IApplyService extends IService<Apply> {
 
 	Page<ApplyVo> selectBySummary(Page<ApplyVo> page, Apply apply);
 
-	List<ApplyVo> selectByChart(Apply apply);
-
 	BigDecimal countTotalPrice(Apply apply);
 
 	Map<String, Object> deleteByIds(List<Integer> ids);
+
+	Map<String, Object> addOrUpdate(Apply apply);
 }

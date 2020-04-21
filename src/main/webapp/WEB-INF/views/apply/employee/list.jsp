@@ -192,7 +192,7 @@
 		for(var i = 0; i < item.length; i++){
 			ids[i] = item[i].eid;
 		}
-		$.messager.confirm('信息提示', '确定要删除'+ids.length+'条记录？', function(result) {
+		$.messager.confirm('信息提示', '确定要删除'+ids.length+'条记录？删除后，这些员工和与员工相关的领用信息将被清空，三思！建议修改员工，而不是删除。', function(result) {
 			if (result) {
 				$.messager.prompt('警告','请输入管理员密码',function(val){
 					if(val == 'puluo'){

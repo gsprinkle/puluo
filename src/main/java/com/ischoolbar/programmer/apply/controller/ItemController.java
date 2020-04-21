@@ -101,6 +101,27 @@ public class ItemController {
 	public List<Item> getItemDropList(){
 		return itemService.list();
 	}
+	
+	/**
+	 * 去掉1
+	 * @return
+	 */
+	@RequestMapping("/formatUnit")
+	@ResponseBody
+	public Map<String,Object> formatUnit(){
+		Map<String,Object> ret = new HashMap<>();
+		List<Item> itemList = itemService.list();
+		for(Item item : itemList){
+			String unit = item.getUnit();
+			if(unit.contains("1")){
+				item.setUnit(unit.substring(1,unit.length()));
+				itemService.saveOrUpdate(item);
+			}
+		}
+		ret.put("type", "success");
+		ret.put("msg", "批量去除1成功！");
+		return ret;
+	}
 
 	
 }
