@@ -59,6 +59,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- 领用统计 -->
 	<select id="selectBySummary" resultMap="applyVoResult">
 		SELECT
+		<if test="apply.dateMode == 1">
+			date_format(apply_date,'%Y-%m-%d') summary_date,
+		</if>
 		<if test="apply.dateMode == 2">
 			date_format(apply_date,'%Y-%m') summary_date,
 		</if>
@@ -76,6 +79,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<where>
 			<if	test="apply.deptId != null and apply.deptId != '' and apply.deptId != 1000">
 				and a.dept_id = ${apply.deptId}
+			</if>
+			<!-- 按日查询 DATE_FORMAT(apply_date,'%Y-%m-%d') = '${date}' -->
+			<if test="apply.dateMode == 1">
+				<if test="apply.date != null">
+					and DATE_FORMAT(apply_date,'%Y-%m-%d') = '${apply.date}'
+				</if>
 			</if>
 			<!-- 按月查询 DATE_FORMAT(apply_date,'%Y-%m') = '${date}' -->
 			<if test="apply.dateMode == 2">
