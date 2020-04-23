@@ -51,6 +51,11 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
 		try {
 			// 迭代删除部门，该部门下的员工一并删除
 			for(Integer id : ids) {
+				//先查询自己是否存在,不存在跳过
+				Department dept = baseMapper.selectById(id);
+				if(dept == null){
+					continue;
+				}
 				List<Integer> eids = new ArrayList<>();
 				List<Employee> empList = empMapper.selectList(new QueryWrapper<Employee>().eq("dept_id", id));
 				// 如果该部门下的员工不为空，封装IDS

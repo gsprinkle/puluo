@@ -91,7 +91,11 @@ public class StockServiceImpl extends ServiceImpl<StockMapper, Stock> implements
 		// 迭代删除
 		// 删除采购数据的同时，库存中对应的物品数量要减掉删除的数量
 		for(Integer id : ids){
+			//先查询自己是否存在,不存在跳过
 			Stock oldStock = baseMapper.selectById(id);
+			if(oldStock == null) {
+				continue;
+			}
 			Inventory inv = inventoryMapper.selectOne(new QueryWrapper<Inventory>().eq("item_id", oldStock.getItemId()));
 			if(inv == null){
 				ret.put("type", "error");

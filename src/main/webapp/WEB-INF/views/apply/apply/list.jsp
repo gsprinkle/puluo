@@ -83,12 +83,12 @@
 						if(data && data.length >0){
 							$('#add-cc-item').combobox('setValue',data[0].itemId);
 							$('#itemUnit').text(data[0].unit);
-							$('#show-item-price').text(data[0].itemPrice);
+							$('#show-item-price').text(data[0].itemPrice + '元');
 						}
 					},
 					onSelect : function(data){
 						$('#itemUnit').text(data.unit);
-						$('#show-item-price').text(data.itemPrice);
+						$('#show-item-price').text(data.itemPrice + '元');
 					}
 					" />
 					</td>

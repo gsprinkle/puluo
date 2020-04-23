@@ -182,7 +182,7 @@
 	 * 删除记录
 	 */
 	function remove() {
-		var item = $('#data-datagrid').datagrid('getSelections');
+		var item = $('#data-datagrid').datagrid('getChecked');
 		if(item==null || item.length < 1){
 			$.messager.alert('信息提示', "请选择要删除的数据", 'info');
 			return;
@@ -326,6 +326,7 @@
 		}, ] ],
 		onLoadSuccess : function(data) {
 			$('#data-datagrid').datagrid('unselectAll');
+			$('#data-datagrid').datagrid('clearChecked');
 		}
 	});
 	/*关闭tabs*/

@@ -105,7 +105,7 @@ public class ItemController {
 	/**
 	 * 去掉1
 	 * @return
-	 */
+	 *//*
 	@RequestMapping("/formatUnit")
 	@ResponseBody
 	public Map<String,Object> formatUnit(){
@@ -121,7 +121,7 @@ public class ItemController {
 		ret.put("type", "success");
 		ret.put("msg", "批量去除1成功！");
 		return ret;
-	}
+	}*/
 
 	
 }

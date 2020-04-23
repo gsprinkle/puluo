@@ -9,7 +9,7 @@
 		</div>
 		<div class="wu-toolbar-search">
 			<label>物品名称:</label><input id="search-name" onkeyup="changeName()" class="wu-text" style="width: 100px">
-			<input type="button" onclick="formatUnit()" value="去掉1" />
+			<!-- <input type="button" onclick="formatUnit()" value="去掉1" /> -->
 			<!-- <a href="#" id="search-btn"	class="easyui-linkbutton" iconCls="icon-search">搜索</a> -->
 		</div>
 
@@ -165,7 +165,7 @@
 	 * 批量删除记录
 	 */
 	function remove() {
-		var item = $('#data-datagrid').datagrid('getSelections');
+		var item = $('#data-datagrid').datagrid('getChecked');
 		if(item==null || item.length < 1){
 			$.messager.alert('信息提示', "请选择要删除的数据", 'info');
 			return;
@@ -306,6 +306,7 @@
 		}, ] ],
 		onLoadSuccess : function(data) {
 			$('#data-datagrid').datagrid('unselectAll');
+			$('#data-datagrid').datagrid('clearChecked');
 		}
 	});
 	
@@ -316,7 +317,7 @@
 		closeTab('采购管理');
 	}
 	
-	function formatUnit(){
+/* 	function formatUnit(){
 		$.ajax({
 			url : '../item/formatUnit',
 			dataType : 'json',
@@ -328,5 +329,5 @@
 				}
 			}
 		})
-	}
+	} */
 </script>

@@ -66,7 +66,19 @@
 				<td><input type="text" name="itemId" class="easyui-combobox"
 					data-options="required:true, missingMessage:'请选物品',
 						url : '../item/getItemDropList',
-						valueField : 'itemId',textField : 'itemName'
+						valueField : 'itemId',textField : 'itemName',
+					onLoadSuccess : function(){
+						var data = $(this).combobox('getData');
+						if(data && data.length >0){
+							$(this).combobox('setValue',data[0].itemId);
+							$('#itemUnit').text(data[0].unit);
+							$('#show-item-price').text(data[0].itemPrice + '元');
+						}
+					},
+					onSelect : function(data){
+						$('#itemUnit').text(data.unit);
+						$('#show-item-price').text(data.itemPrice + '元');
+					}
 					" /></td>
 			</tr>
 			<!-- 采购数量 -->
@@ -75,6 +87,14 @@
 				<td><input type="text" name="stockNum" class="easyui-numberbox"
 					data-options="required:true, missingMessage:'请填写采购数量'" /></td>
 			</tr>
+			<!-- 显示单位--> <!-- 显示单价 -->
+				<tr>
+					<td></td>
+					<td align="left">
+						单位：<span id="itemUnit" style="margin:5px 20px 5px 0;color:#0add00"></span>
+						单价：<span id="show-item-price" style="margin:5px 20px 5px 0;color:#0add00"></span>
+					</td>
+				</tr>
 			<!-- 备注 -->
 			<tr>
 				<td align="right">备注:</td>
@@ -211,7 +231,7 @@
 	 * 删除记录
 	 */
 	function remove() {
-		var item = $('#data-datagrid').datagrid('getSelections');
+		var item = $('#data-datagrid').datagrid('getChecked');
 		if(item==null || item.length < 1){
 			$.messager.alert('信息提示', "请选择要删除的数据", 'info');
 			return;
@@ -340,6 +360,7 @@
 		}, ] ],
 		onLoadSuccess : function(data) {
 			$('#data-datagrid').datagrid('unselectAll');
+			$('#data-datagrid').datagrid('clearChecked');
 		},
 		onDblClickRow : onDblClickRow,
 		onClickRow :onClickRow

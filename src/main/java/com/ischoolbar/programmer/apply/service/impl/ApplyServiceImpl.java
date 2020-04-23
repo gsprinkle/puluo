@@ -65,7 +65,7 @@ public class ApplyServiceImpl extends ServiceImpl<ApplyMapper, Apply> implements
 		// 迭代删除领用信息
 		for(Integer id : ids){
 			// 首先更新库存，领用信息删除后，库存应该增加相应的物品数量
-			// 先查出该条领用信息
+			// 先查询自己是否存在,不存在跳过
 			Apply apply = baseMapper.selectById(id);
 			if(apply == null) {
 				continue;

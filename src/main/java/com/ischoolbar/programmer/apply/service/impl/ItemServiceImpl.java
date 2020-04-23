@@ -61,6 +61,11 @@ public class ItemServiceImpl extends ServiceImpl<ItemMapper, Item> implements II
 		try {
 			// 迭代删除物品
 			for (Integer id : ids) {
+				//先查询自己是否存在,不存在跳过
+				Item item = baseMapper.selectById(id);
+				if(item == null){
+					continue;
+				}
 				// 先删除该物品对应的 【采购信息】、【领用信息】、【库存信息】
 				stocknum += stockMapper.delete(new QueryWrapper<Stock>().eq("item_id", id));
 				applynum += applyMapper.delete(new QueryWrapper<Apply>().eq("item_id", id));

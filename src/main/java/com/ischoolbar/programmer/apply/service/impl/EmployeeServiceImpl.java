@@ -13,6 +13,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ischoolbar.programmer.apply.entity.Apply;
 import com.ischoolbar.programmer.apply.entity.Employee;
+import com.ischoolbar.programmer.apply.entity.Item;
 import com.ischoolbar.programmer.apply.entity.Stock;
 import com.ischoolbar.programmer.apply.mapper.ApplyMapper;
 import com.ischoolbar.programmer.apply.mapper.EmployeeMapper;
@@ -48,6 +49,11 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
 			// 删除员工，一并删除该员工相关的领用信息
 			// 查询出
 			for (Integer id : ids) {
+				//先查询自己是否存在,不存在跳过
+				Employee emp = baseMapper.selectById(id);
+				if(emp == null){
+					continue;
+				}
 				// 删除与该员工相关的领用信息
 				applyNum += applyMapper.delete(new QueryWrapper<Apply>().eq("eid", id));
 				// 删除该员工
